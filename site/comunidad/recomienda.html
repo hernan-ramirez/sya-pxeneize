@@ -1,0 +1,116 @@
+<?
+include "../include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>Recomienda esta P&aacute;gina</TITLE>
+<META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+<BODY MARGINWIDTH="3" LEFTMARGIN="3" TOPMARGIN="3" MARGINHEIGHT="3" BGCOLOR="#FF7F00">
+
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000" ALIGN="center"> 
+    <TD>Recomend&aacute; este Sitio</TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+   <TR BGCOLOR="#000000"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR>
+    <TD>
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR> 
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          <TD HEIGHT="16" BGCOLOR="#FFFFFF">
+            <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0" BGCOLOR="#FFFFFF" ALIGN="center">
+<?
+function formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario) {
+?>
+              <TR ALIGN="center"> 
+                <TD><FONT COLOR="#000000"><BR>
+                  En esta secci&oacute;n pod&eacute;s recomendarle la p&aacute;gina 
+                  a un conocido.<BR>
+                  Por favor no dejes campos sin completar.<BR>
+                  </FONT><BR>
+                  <FORM METHOD="post" ACTION="<? echo $PHP_SELF ?>">
+                    <TABLE BORDER="0" CELLSPACING="2" CELLPADDING="2">
+                      <TR> 
+                        <TD ALIGN="RIGHT"> <FONT COLOR="#000000">Tu Nombre</FONT></TD>
+                        <TD ALIGN="right"> 
+                          <INPUT TYPE="text" NAME="nombre" VALUE="<? echo $nombre ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD ALIGN="RIGHT"> <FONT COLOR="#000000">Tu Mail</FONT></TD>
+                        <TD ALIGN="right"> 
+                          <INPUT TYPE="text" NAME="mail" VALUE="<? echo $mail ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD ALIGN="RIGHT"><FONT COLOR="#000000">Nombre del Destinatario</FONT></TD>
+                        <TD ALIGN="right"> 
+                          <INPUT TYPE="text" NAME="destinatario" VALUE="<? echo $destinatario ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD ALIGN="RIGHT"> <FONT COLOR="#000000">Mail del Destinatario</FONT></TD>
+                        <TD ALIGN="right"> 
+                          <INPUT TYPE="text" NAME="maildestinatario" VALUE="<? echo $maildestinatario ?>">
+                        </TD>
+                      </TR>
+                    </TABLE>
+                    <BR>
+                    <INPUT TYPE="submit" NAME="Submit" VALUE="Recomendar">
+                    <INPUT TYPE="reset" NAME="Submit" VALUE="Borrar">
+                  </FORM>
+                </TD>
+              </TR>
+<?
+	}
+?> 
+              <TR ALIGN="center"> 
+                <TD><FONT COLOR="#000000"><?
+if (!isset($nombre) && !isset($mail) && !isset($maildestinatario) && !isset($destinatario)) {  
+formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario);
+} else {
+if (empty($nombre) || empty ($mail) || empty ($maildestinatario) || empty ($destinatario)) { 
+?>Olvidaste completar un campo...<?
+formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario);
+} else {
+if (ereg("@", "$mail") && ereg("\.", "$mail") && ereg("@", "$maildestinatario") && ereg("\.", "$maildestinatario")) { 
+mail("$maildestinatario", "$nombre te recomienda PatronXeneize.com", "$destinatario: $nombre te invita a visitar www.PatronXeneize.com , el Sitio Oficial del Patrón.","From: $mail\n");
+
+
+?> Gracias por recomendar <B>jorgebermudez.com</B><BR>
+                  <BR>
+                  El mail fue enviado correctamente a la direcci&oacute;n <? echo $maildestinatario ?>. 
+                  <?
+} else {  
+?> La direcci&oacute;n de mail no es v&aacute;lida... <?
+formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario);
+    }
+  }
+} 
+?> </FONT></TD>
+              </TR>
+            </TABLE>
+          </TD>
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>
+

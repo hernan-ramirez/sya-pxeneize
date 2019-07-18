@@ -1,0 +1,180 @@
+<?
+include "../include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>Sorteos</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+<?
+include "../include/openwindow.inc"
+?>
+<BODY BGCOLOR="#FF7F00" LEFTMARGIN="3" TOPMARGIN="3" MARGINWIDTH="3" MARGINHEIGHT="3">
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000" ALIGN="center"> 
+    <TD>Sorteos</TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR> 
+    <TD> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR> 
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          <TD HEIGHT="16" BGCOLOR="#FFFFFF" ALIGN="CENTER"> <FONT COLOR="#000000"><BR>
+            <?
+	$result = mysql_query("SELECT * FROM sorteos WHERE activo='si'");  
+	if($result!=0){
+		while($row=mysql_fetch_object($result)){
+?> </FONT> 
+            <TABLE WIDTH="95%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR> 
+                <TD WIDTH="120" VALIGN="top"> 
+                  <TABLE WIDTH="120" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> 
+                      <TD><?
+	$result2 = mysql_query("SELECT * FROM fotos WHERE id='$row->id_foto'");  
+	$row2 = mysql_fetch_array($result2);
+?> <IMG SRC="../img/clipart/<? echo $row2[nombre_arch] ?>" WIDTH="120" HEIGHT="80"></TD>
+                    </TR>
+                    <TR> 
+                      <TD> </TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF" BACKGROUND="../img/general/title_1.gif"> 
+                      <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                    </TR>
+                  </TABLE>
+                  <TABLE WIDTH="120" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                    </TR>
+                    <TR> 
+                      <TD> 
+                        <TABLE WIDTH="120" BORDER="0" CELLSPACING="0" CELLPADDING="0" BGCOLOR="#000000">
+                          <TR> 
+                            <TD WIDTH="30"><IMG SRC="../img/general/noticias/imprime.gif" WIDTH="30" HEIGHT="20"></TD>
+                            <TD WIDTH="90"> &nbsp;<A HREF="javascript:openwin('../include/print.html?id=<? echo $row->id ?>&tipo=sorteos','print','width=335,height=350,scrollbars=1')"><FONT COLOR="#FFFFFF">Imprimir</FONT></A></TD>
+                          </TR>
+                        </TABLE>
+                      </TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                    </TR>
+                    <TR> 
+                      <TD> 
+                        <TABLE WIDTH="120" BORDER="0" CELLSPACING="0" CELLPADDING="0" BGCOLOR="#000000">
+                          <TR> 
+                            <TD WIDTH="30"><IMG SRC="../img/general/noticias/recomineda.gif" WIDTH="30" HEIGHT="20"></TD>
+                            <TD WIDTH="90"> &nbsp;<A HREF="javascript:openwin('../include/enviar.html?id=<? echo $row->id ?>&tipo=sorteos','enviar','width=408,height=270,scrollbars=0')"><FONT COLOR="#FFFFFF">Enviar</FONT></A></TD>
+                          </TR>
+                        </TABLE>
+                      </TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+                <TD BGCOLOR="#FFFFFF" BACKGROUND="../img/general/title_1.gif" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                <TD WIDTH="340" VALIGN="top" ALIGN="CENTER"> 
+                  <TABLE WIDTH="90%" BORDER="0" CELLSPACING="2" CELLPADDING="2">
+                    <TR> 
+                      <TD> 
+                        <P ALIGN="CENTER"><FONT COLOR="#000000"><B><? echo $row->titulo ?></B></FONT></P>
+                        <P><FONT COLOR="#000000"><? echo $row->texto ?></FONT></P>
+                      </TD>
+                    </TR>
+                  </TABLE>
+                  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                    <FORM NAME="form" ACTION="<?  echo $PHP_SELF ?>" ENCTYPE="multipart/form-data" METHOD="post">
+                      <TR> 
+                        <TD ALIGN="CENTER">&nbsp;</TD>
+                        <TD ALIGN="CENTER"><FONT COLOR="#000000">Usuario</FONT></TD>
+                        <TD ALIGN="CENTER"><FONT COLOR="#000000">Contrase&ntilde;a 
+                          <INPUT TYPE="hidden" NAME="sorteo" VALUE="<? echo $row->id ?>">
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD ALIGN="CENTER"> 
+                          <INPUT TYPE="submit" NAME="enviar" VALUE="Particip&aacute;">
+                        </TD>
+                        <TD ALIGN="CENTER"> 
+                          <INPUT TYPE="text" NAME="usuario" VALUE="" SIZE="10">
+                        </TD>
+                        <TD ALIGN="CENTER"> 
+                          <INPUT TYPE="PASSWORD" NAME="contrasena" VALUE="" SIZE="10">
+                        </TD>
+                      </TR>
+                    </FORM>
+                  </TABLE>
+                  <?
+if ($enviar){
+if ($row->id==$sorteo){ 
+if ($usuario=="" || $contrasena==""){
+	$mensaje="Complete todos los campos";
+
+}else{
+		$exis=mysql_query("SELECT * FROM registrate WHERE usuario='$usuario' and contrasena='$contrasena'");
+		$exist=mysql_fetch_array($exis);
+		$existe=mysql_num_rows($exis);
+		if ($existe==0){
+			$mensaje="Usted no esta registrado o ingreso mal su usuario o contraseña";
+			}else{
+			$compru=mysql_query("SELECT * FROM sorteos_inscriptos WHERE id_registrado='$exist[id]' and id_sorteo='$sorteo'");
+			$comprueba=mysql_num_rows($compru);
+				if ($comprueba!=0){
+					$mensaje="Usted ya está inscripto";
+					}else{
+					$fecha_creacion = date ("Y-m-d"); 
+					mysql_query("INSERT INTO sorteos_inscriptos(fecha_creacion, id_sorteo, id_registrado) ". "VALUES ('$fecha_creacion', '$sorteo', '$exist[id]')");
+					$mensaje="Gracias por participar";
+					}
+			}
+//cierre del query principal;
+		}
+
+?> 
+                  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                    <TR ALIGN="CENTER"> 
+                      <TD><FONT COLOR="#000099"><? echo $mensaje ?></FONT></TD>
+                    </TR>
+                  </TABLE>
+                  <?	
+	}
+}
+
+?> </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BACKGROUND="../img/general/title_1.gif"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                <TD BGCOLOR="#FFFFFF" BACKGROUND="../img/general/title_1.gif" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                <TD WIDTH="340" VALIGN="top" BACKGROUND="../img/general/title_1.gif"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+              </TR>
+            </TABLE>
+            <FONT COLOR="#000000"><?
+//cierre del query principal;
+	}
+}
+?><BR>
+            Si no estas registrado, registrate <A HREF="javascript:openwin('registrate.html','registrate','width=422,height=350,scrollbars=1')"><FONT COLOR="#FF6600"><B>ac&aacute;</B></FONT></A> 
+            </FONT></TD>
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>

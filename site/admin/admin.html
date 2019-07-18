@@ -1,0 +1,182 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<BODY>
+
+<P>PatronXeneize.com -> Admin</P>
+
+
+
+
+<?
+	if (!isset($paso)){ $paso=1; }
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que decea eliminar este registro?<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+  </DIV>
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM admin WHERE id = $id");
+}
+
+if ($enviar) {
+	$fecha_creacion = date ("Y-m-d"); 
+	if ($accion=="modificar"){
+			$sql="UPDATE admin SET nombre='$nombre', apellido='$apellido', usuario='$usuario', contrasena='$contrasena', nivel='$nivel' WHERE id='$id'";
+		}
+	if ($accion==agregar){
+		   $sql = "INSERT INTO admin (fecha_creacion, nombre, apellido, usuario, contrasena, nivel) ". "VALUES ('$fecha_creacion', '$nombre', '$apellido', '$usuario', '$contrasena', '$nivel')";
+		}
+   $result = mysql_query($sql);
+?>
+
+<DIV ID="Layer1" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:1; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER"> El registro de <? echo $nombre ?>&nbsp;<? echo $apellido ?> 
+    ha sido correctamente ingresado/modificado en la base de datos.<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">ACEPTAR</A></P>
+  </DIV>
+
+<?		
+}
+	$result = mysql_query("SELECT * FROM admin");  
+	$total=mysql_num_rows($result);
+	
+?> 
+
+<P><A HREF="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">Agregar 
+  Nuevo Usuario</A></P>
+<P>Total Usuarios:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956" ALIGN="CENTER"> 
+          <TD><FONT COLOR="#FFFFFF"> Modificar </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Apellido </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Nombre </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Usuario</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Contrase&ntilde;a</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Nivel </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha Creacion</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Borrar </FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM admin ORDER BY apellido LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+
+if ($accion=="modificar" && $row->id == $id){
+	if (!$enviar){
+		$result2 = mysql_query("SELECT * FROM admin WHERE id='$id'"); 
+		if ($result2 != 0){
+			while ($row2=mysql_fetch_object($result2)){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $id ?>&paso=<? echo $paso ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="MODIFICAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="apellido" VALUE="<? echo $row2->apellido ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="nombre" VALUE="<? echo $row2->nombre ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="usuario" VALUE="<? echo $row2->usuario ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="contrasena" VALUE="<? echo $row2->contrasena ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="nivel" VALUE="<? echo $row2->nivel?>">
+            </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?></FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+			}
+		}
+	mysql_free_result($result2);
+	}
+}else{
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Modificar</A></TD>
+          <TD><? echo $row->id ?></TD>
+          <TD><? echo $row->apellido ?></TD>
+          <TD><? echo $row->nombre ?></TD>
+          <TD><? echo $row->usuario ?></TD>
+          <TD><? echo $row->contrasena ?> </TD>
+          <TD><? echo $row->nivel ?></TD>
+          <TD ALIGN="CENTER"><? echo $row->fecha_creacion ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+			}
+		}
+   }
+
+
+
+if ($accion==agregar){
+	if (!$enviar){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="AGREGAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="apellido" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="nombre" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="usuario">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="contrasena">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="nivel">
+            </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+		}
+	}
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+</BODY> 
+</HTML>

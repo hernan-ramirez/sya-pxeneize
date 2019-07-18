@@ -1,0 +1,322 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<BODY>
+
+<P>PatronXeneize.com -> Registrate</P>
+
+
+
+
+<?
+	if (!isset($paso)){ $paso=1; }
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:136px; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que desea eliminar este registro?<BR>
+    <BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+  </DIV>
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM registrate WHERE id = $id");
+}
+	$fecha_creacion = date ("Y-m-d"); 
+if ($enviar) {
+
+	if ($accion=="modificar"){
+			$sql="UPDATE registrate SET nombre='$nombre', apellido='$apellido', fecha_nacimiento='$fecha_nacimiento', usuario='$usuario', contrasena='$contrasena', hincha_de='$hincha_de', email='$email', ocupacion='$ocupacion', telefono='$telefono', domicilio_calle='$domicilio_calle', domicilio_localidad='$domicilio_localidad', domicilio_cp='$domicilio_cp', domicilio_pais='$domicilio_pais', sexo='$sexo', lugar_conexion='$lugar_conexion', horario_conexion='$horario_conexion', noticias_sya='$noticias_sya', noticias_patronxeneize='$noticias_patronxeneize', noticias_terceros='$noticias_terceros', compras='$compras', credito='$credito', encuesta='$encuesta' WHERE id='$id'";
+		}
+	if ($accion=="agregar"){
+		   $sql ="INSERT INTO registrate (fecha_creacion, nombre, apellido, fecha_nacimiento, usuario, contrasena, hincha_de, email, ocupacion, telefono, domicilio_calle, domicilio_localidad, domicilio_cp, domicilio_pais, sexo, lugar_conexion, horario_conexion, noticias_sya, noticias_patronxeneize, noticias_terceros, compras, credito, encuesta) ". "VALUES ('$fecha_creacion', '$nombre', '$apellido',  '$fecha_nacimiento', '$usuario', '$contrasena', '$hincha_de', '$email', '$ocupacion', '$telefono', '$domicilio_calle', '$domicilio_localidad', '$domicilio_cp', '$domicilio_pais', '$sexo', '$lugar_conexion', '$horario_conexion', '$noticias_sya', '$noticias_patronxeneize', '$noticias_terceros', '$compras', '$credito', '$encuesta')";
+		}
+   $result = mysql_query($sql);
+?>
+
+<DIV ID="Layer1" STYLE="position:absolute; left:35%; top:137px; width:223px; height:145px; z-index:1; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER"> El registro de <? echo $nombre ?>&nbsp;<? echo $apellido ?> 
+    ha sido correctamente ingresado/modificado en la base de datos.<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">ACEPTAR</A></P>
+  </DIV>
+
+<?		
+}
+	$result = mysql_query("SELECT * FROM registrate");  
+	$total=mysql_num_rows($result);
+	
+?> 
+
+<P><A HREF="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">Agregar 
+  Nuevo Registrado</A></P>
+<P>Total Registrados:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+<TABLE WIDTH="2000" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956"> 
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Modificar </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Apellido </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Nombre </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Fecha Nac. </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Usuario </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Contraseña </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Hincha </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Mail </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Ocupaci&oacute;n </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Telefono </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Calle </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Loc. </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> cp </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Pais</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Sexo</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Lugar</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Hor</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">n.SYA</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">n.JS</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">n.terce.</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">compras</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">credito</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">encuesta</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Fecha Creacion</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Borrar</FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM registrate ORDER BY apellido LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+
+if ($accion=="modificar" && $row->id == $id){
+	if (!$enviar){
+		$result2 = mysql_query("SELECT * FROM registrate WHERE id='$id'"); 
+		if ($result2 != 0){
+			while ($row2=mysql_fetch_object($result2)){
+?> 
+        <TR> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $id ?>&paso=<? echo $paso ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="MODIFICAR">
+            </TD>
+            <TD BGCOLOR="#104956" ALIGN="CENTER"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="apellido" VALUE="<? echo $row2->apellido ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="nombre" VALUE="<? echo $row2->nombre ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="fecha_nacimiento" VALUE="<? echo $row2->fecha_nacimiento ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="usuario" VALUE="<? echo $row2->usuario ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="contrasena" VALUE="<? echo $row2->contrasena ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="hincha_de" VALUE="<? echo $row2->hincha_de ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="email" VALUE="<? echo $row2->email ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="ocupacion" VALUE="<? echo $row2->ocupacion ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="telefono" VALUE="<? echo $row2->telefono ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="domicilio_calle" VALUE="<? echo $row2->domicilio_calle ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="domicilio_localidad" VALUE="<? echo $row2->domicilio_localidad ?>">
+            </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="domicilio_cp" VALUE="<? echo $row2->domicilio_cp ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="domicilio_pais" VALUE="<? echo $row2->domicilio_pais ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="sexo" VALUE="<? echo $row2->sexo ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="lugar_conexion" VALUE="<? echo $row2->lugar_conexion ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="horario_conexion" VALUE="<? echo $row2->horario_conexion ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="noticias_sya" VALUE="<? echo $row2->noticias_sya ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="noticias_patronxeneize" VALUE="<? echo $row2->noticias_patronxeneize ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="noticias_terceros" VALUE="<? echo $row2->noticias_terceros ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="compras" VALUE="<? echo $row2->compras ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="credito" VALUE="<? echo $row2->credito ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="encuesta" VALUE="<? echo $row2->encuesta ?>">
+            </TD>
+            <TD BGCOLOR="#104956" ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?> 
+              </FONT></TD>
+            <TD BGCOLOR="#104956" ALIGN="CENTER"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+			}
+		}
+	mysql_free_result($result2);
+	}
+}else{
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Modificar</A></TD>
+          <TD ALIGN="CENTER"><? echo $row->id ?></TD>
+          <TD><? echo $row->apellido ?></TD>
+          <TD><? echo $row->nombre ?></TD>
+          <TD><? echo $row->fecha_nacimiento ?></TD>
+          <TD><? echo $row->usuario ?></TD>
+          <TD><? echo $row->contrasena ?></TD>
+          <TD><? echo $row->hincha_de ?></TD>
+          <TD><A HREF="mailto:<? echo $row->email ?>"><? echo $row->email ?></A></TD>
+          <TD> <? echo $row->ocupacion ?></TD>
+          <TD><? echo $row->telefono ?></TD>
+          <TD><? echo $row->domicilio_calle ?></TD>
+          <TD><? echo $row->domicilio_localidad ?></TD>
+          <TD><? echo $row->domicilio_cp ?></TD>
+          <TD><? echo $row->domicilio_pais ?></TD>
+          <TD><? echo $row->sexo ?></TD>
+          <TD><? echo $row->lugar_conexion ?></TD>
+          <TD><? echo $row->horario_conexion ?></TD>
+          <TD><? echo $row->noticias_sya ?></TD>
+          <TD><? echo $row->noticias_patronxeneize ?></TD>
+          <TD><? echo $row->noticias_terceros ?></TD>
+          <TD><? echo $row->compras ?></TD>
+          <TD><? echo $row->credito ?></TD>
+          <TD><? echo $row->encuesta ?></TD>
+          <TD><? echo $row->fecha_creacion ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+			}
+		}
+   }
+
+
+
+if ($accion==agregar){
+	if (!$enviar){
+?> 
+        <TR> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="AGREGAR">
+            </TD>
+            <TD BGCOLOR="#104956" ALIGN="CENTER"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="apellido" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="nombre" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="fecha_nacimiento" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="usuario" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="contrasena" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="hincha_de" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="email" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="ocupacion" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="telefono">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="domicilio_calle">
+            </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="domicilio_localidad">
+            </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="domicilio_cp">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="domicilio_pais">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="sexo">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="lugar_conexion">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="horario_conexion">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="noticias_sya">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="noticias_patronxeneize">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="noticias_terceros">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="compras">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="credito">
+            </TD>
+            <TD BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+              <INPUT TYPE="Text" NAME="encuesta">
+            </TD>
+            <TD BGCOLOR="#104956" ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?> 
+              </FONT></TD>
+            <TD BGCOLOR="#104956" ALIGN="CENTER"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+		}
+	}
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+</BODY> 
+</HTML>

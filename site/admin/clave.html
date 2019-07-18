@@ -1,0 +1,59 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<HEAD>
+<TITLE>Administrador de patronxeneize</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+</HEAD>
+
+<BODY>
+PatronXeneize.com Administrator<BR>
+<? function form($usuario, $contrasena){ ?>
+<TABLE WIDTH="250" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+  <FORM METHOD="post" ACTION="<? echo $PHP_SELF ?>" ENCTYPE="multipart/form-data">
+    <TR> 
+      <TD ALIGN="RIGHT" WIDTH="50%">Usuario</TD>
+      <TD WIDTH="50%"> 
+        <INPUT TYPE="TEXT" NAME="usuario" VALUE="<? echo $usuario ?>">
+      </TD>
+    </TR>
+    <TR> 
+      <TD ALIGN="RIGHT" WIDTH="50%">Contrase&ntilde;a</TD>
+      <TD WIDTH="50%"> 
+        <INPUT TYPE="PASSWORD" NAME="contrasena" VALUE="<? echo $contrasena ?>">
+      </TD>
+    </TR>
+    <TR>
+      <TD ALIGN="RIGHT" WIDTH="50%">&nbsp;</TD>
+      <TD WIDTH="50%">
+        <INPUT TYPE="Submit" NAME="enviar" VALUE="ENTRAR">
+      </TD>
+    </TR>
+  </FORM>
+</TABLE>
+<?
+ } 
+
+if ($enviar) {
+	if ($usuario=="" || $contrasena==""){
+		echo "complete bien los campos";
+		form($usuario, $contrasena);
+	}else{
+				$result=mysql_query("SELECT nivel, nombre, apellido FROM admin WHERE usuario='$usuario' and contrasena='$contrasena'");
+				if (mysql_num_rows($result) !=0) {
+					$row=mysql_fetch_array($result);
+?> Bienvenido <? echo $row[1] ?>&nbsp;<? echo $row[2] ?>. Ya podes<A HREF="content.html?nivel=<? echo $row[0] ?>"> 
+ingresar.</A> <?
+				}else{
+					echo "Los datos no son correctos";
+					form($usuario, $contrasena);
+				}
+	}
+}else{
+form($usuario, $contrasena);
+}
+?> 
+</BODY>
+</HTML>

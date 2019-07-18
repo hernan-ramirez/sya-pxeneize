@@ -1,0 +1,116 @@
+<?
+include "../include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>Contactenos</TITLE>
+<META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+<BODY MARGINWIDTH="2" LEFTMARGIN="2" TOPMARGIN="2" MARGINHEIGHT="2" BGCOLOR="#FF7F00">
+<?
+function formulario($PHP_SELF, $nombre, $mail, $texto) {
+?> 
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+ 
+    <FORM METHOD="post" ACTION="<? echo $PHP_SELF ?>">
+      
+  <TR BGCOLOR="#000000" ALIGN="center"> 
+    <TD>Cont&aacute;ctenos</TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR> 
+    <TD> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR> 
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          <TD HEIGHT="16" BGCOLOR="#FFFFFF" ALIGN="CENTER"> <BR>
+            <TABLE BORDER="0" CELLSPACING="2" CELLPADDING="2">
+              <TR> 
+                <TD ALIGN="RIGHT"> <FONT COLOR="#FFFFFF">Su Nombre</FONT></TD>
+                <TD ALIGN="LEFT"> 
+                  <INPUT TYPE="text" NAME="nombre" VALUE="<? echo $nombre ?>">
+                </TD>
+              </TR>
+              <TR> 
+                <TD ALIGN="RIGHT"> <FONT COLOR="#FFFFFF">Su Mail</FONT></TD>
+                <TD ALIGN="LEFT"> 
+                  <INPUT TYPE="text" NAME="mail" VALUE="<? echo $mail ?>">
+                </TD>
+              </TR>
+              <TR> 
+                <TD ALIGN="RIGHT">Motivo</TD>
+                <TD ALIGN="LEFT"> 
+                  <SELECT NAME="motivo">
+                    <OPTION VALUE="Sujerencias" SELECTED>Sujerencias</OPTION>
+                    <OPTION VALUE="Informacion">Informacion</OPTION>
+                    <OPTION VALUE="Ventas">Ventas</OPTION>
+                    <OPTION VALUE="Pedidos">Pedidos</OPTION>
+                    <OPTION VALUE="Otros">Otros</OPTION>
+                  </SELECT>
+                </TD>
+              </TR>
+              <TR ALIGN="CENTER"> 
+                <TD COLSPAN="2"> 
+                  <TEXTAREA NAME="texto" ROWS="5" COLS="33">comentario</TEXTAREA>
+                </TD>
+              </TR>
+            </TABLE>
+            <BR>
+            <INPUT TYPE="submit" NAME="Submit" VALUE="Mandar">
+            <INPUT TYPE="reset" NAME="Submit" VALUE="Borrar">
+          </TD>
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+    </FORM>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<?
+	}
+?> 
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR ALIGN="center" BGCOLOR="#000000"> 
+    <TD> <?
+if (!isset($nombre) && !isset($mail)) {  
+formulario($PHP_SELF, $nombre, $mail, $texto);
+} else {
+if (empty($nombre) || empty ($mail) || empty ($texto)) { 
+?> <B><FONT COLOR="#FFFFFF">Olvid&oacute; completar un campo...</FONT></B> <?
+formulario($PHP_SELF, $nombre, $mail, $texto);
+} else {
+if (ereg("@", "$mail") && ereg("\.", "$mail")) { 
+mail("nak@sportsya.com", "$motivo", "$nombre: $texto","From: $mail\n");
+
+
+?> <FONT COLOR="#FFFFFF">Gracias por contactarnos </FONT><B>JorgeBermudez.com</B><FONT COLOR="#FFFFFF"><BR>
+      <BR>
+      El mail fue enviado correctamente a nuestra direcci&oacute;n . <?
+} else {  
+?> La direcci&oacute;n de mail no es v&aacute;lida... <?
+formulario($PHP_SELF, $nombre, $mail, $texto);
+    }
+  }
+} 
+?> </FONT></TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>
+

@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<TITLE>Untitled Document</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF">
+<?
+include "include/db_connect.inc";
+$result=mysql_query("SELECT * FROM partidos_campeonato");
+
+if ($result !=0){
+while($row = mysql_fetch_object($result)){
+
+		   $sql="UPDATE partidos_test SET campeonato='$row->id' WHERE campeonato='$row->campeonato'";
+		
+			mysql_query($sql);
+		echo "id".$row->id." Modificado";
+	}
+}else{
+ echo "nada";
+}
+?>
+
+</BODY>
+</HTML>

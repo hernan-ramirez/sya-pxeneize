@@ -1,0 +1,246 @@
+<?
+include "include/db_connect.inc";
+?>
+
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function openwin(theURL,winName,features) {
+  window.open(theURL,winName,features);
+} 
+
+function showImage (url, name, w, h) {	
+	var n3 = (navigator.appName.indexOf('Netscape')!=-1 && navigator.appVersion.indexOf('3.')!=-1)?true:false;
+	var ww = (n3)?(parseInt(w)+20):parseInt(w);
+	var wh = (n3)?(parseInt(h)+20):parseInt(h);
+	var winname = (name.indexOf(' ')!=-1)?name.substring(0, name.indexOf(' ')):name;
+	var wnd = window.open('', winname, 'width='+ww+',height='+(wh+0));
+	var code =  "<html><head>\n" +
+				"<title>" + name + "</title></head>\n" +
+				"<body bgcolor=#000000 text=#CCCCCC marginwidth=0 marginheight=0 leftmargin=0 topmargin=0>\n" +
+				"<center><img src=\"" + url + "\"><br>\n" +
+				"</center></body></html>"
+	wnd.document.write(code);
+	wnd.document.close();
+}
+
+-->
+</SCRIPT>
+<BODY>
+<P>PatronXeneize.com -> Noticia</P>
+<?
+	if (!isset($paso)){ $paso=1; }
+if ($borrar=="si"){
+?> 
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que desea eliminar este registro?<BR>
+    <BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp 
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+</DIV>
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM noticia WHERE id = $id");
+}
+
+if ($enviar) {
+	$fecha_creacion = date ("Y-m-d");
+ 
+if ($nivel == "Principal" || $nivel == "Secundaria" && $tipo_contenido=="Noticia" ){
+	mysql_query("update noticia set nivel='General', fecha_creacion='$fecha_creacion' where nivel='$nivel' and tipo_contenido='$tipo_contenido'");
+}
+if ($nivel == "Principal" && $tipo_contenido == "Columna"){
+	mysql_query("update noticia set nivel='General', fecha_creacion='$fecha_creacion' where nivel='Principal' and tipo_contenido='Columna'");
+}
+
+	if ($accion=="modificar"){
+				$sql="UPDATE noticia SET tipo_contenido='$tipo_contenido', titulo='$titulo', texto='$texto', nivel='$nivel', id_foto1='$id_foto1', id_foto2='$id_foto2', id_foto3='$id_foto3', caracteres='$caracteres' WHERE id=$id";
+	}
+
+	if ($accion=="agregar"){
+		   $sql = "INSERT INTO noticia (fecha_creacion, tipo_contenido, titulo, texto, nivel, id_foto1, id_foto2, id_foto3, caracteres) ". "VALUES ('$fecha_creacion', '$tipo_contenido', '$titulo', '$texto', '$nivel', '$id_foto1', '$id_foto2', '$id_foto3', '$caracteres')";
+		}
+
+   $result = mysql_query($sql);
+?> 
+<DIV ID="Layer1" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:1; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER"> El registro de <? echo $titulo ?> ha sido correctamente 
+    ingresado/modificado en la base de datos.<BR>
+    <BR>
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">ACEPTAR</A></P>
+</DIV>
+<?		
+}
+?> 
+<P><A HREF="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">Agregar 
+  Nueva Noticia/Columna</A><BR>
+  <BR>
+</P>
+<?
+
+ if (!$enviar){ 
+if ($accion=="modificar"){
+	$result2 = mysql_query("SELECT * FROM noticia WHERE id='$id'");
+	$row2=mysql_fetch_array($result2);
+	$her="modificar&id=$id";
+	}else{
+	$her="agregar";
+	}
+if ($accion=="agregar" || $accion=="modificar"){
+  ?> 
+<FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=<? echo $her ?>&paso=<? echo $paso ?>">
+  <TABLE BORDER="0" CELLSPACING="1" CELLPADDING="1" WIDTH="500">
+    <TR> 
+      <TD ALIGN="RIGHT">ID</TD>
+      <TD><FONT COLOR="#003399"><? echo $id ?></FONT></TD>
+      <TD ALIGN="RIGHT">Caracteres</TD>
+      <TD> 
+        <INPUT TYPE="Text" NAME="caracteres" VALUE="<? if ($accion=="agregar") { echo "250";}else{ echo $row2[caracteres];} ?>">
+      </TD>
+    </TR>
+    <TR> 
+      <TD ALIGN="RIGHT">Tipo</TD>
+      <TD> <FONT COLOR="#003399"> 
+        <SELECT NAME="tipo_contenido">
+          <OPTION VALUE="Noticia" <? if ($row2[tipo_contenido] == "Noticia"){echo "selected";} ?>>Noticia</OPTION>
+          <OPTION VALUE="Columna" <? if ($row2[tipo_contenido] == "Columna"){echo "selected";} ?>>Columna</OPTION>
+        </SELECT>
+        </FONT></TD>
+      <TD ALIGN="RIGHT">Nivel</TD>
+      <TD> <FONT COLOR="#003399"> 
+        <SELECT NAME="nivel">
+          <? if ($row2[nivel] == "Principal"){ ?> 
+          <OPTION VALUE="Principal" selected>Principal</OPTION>
+          <? } else { ?> 
+          <OPTION VALUE="Principal">Principal</OPTION>
+          <? } ?> <? if ($row2[nivel] == "Secundaria"){ ?> 
+          <OPTION VALUE="Secundaria" selected>Secundaria</OPTION>
+          <? } else { ?> 
+          <OPTION VALUE="Secundaria">Secundaria</OPTION>
+          <? } ?> <? if ($row2[nivel] == "General"){ ?> 
+          <OPTION VALUE="General" selected>General</OPTION>
+          <? } else { ?> 
+          <OPTION VALUE="General">General</OPTION>
+          <? } ?> 
+        </SELECT>
+        </FONT></TD>
+    </TR>
+    <TR> 
+      <TD ALIGN="RIGHT">T&iacute;tulo</TD>
+      <TD COLSPAN="3" ALIGN="CENTER"><FONT COLOR="#003399"> 
+        <INPUT TYPE="Text" NAME="titulo" VALUE="<? echo $row2[titulo] ?>" MAXLENGTH="60">
+        </FONT> </TD>
+    </TR>
+    <TR> 
+      <TD>Texto</TD>
+      <TD COLSPAN="3" ALIGN="CENTER"><FONT COLOR="#003399"> 
+        <TEXTAREA NAME="texto" COLS="48" ROWS="10"><? echo $row2[texto] ?></TEXTAREA>
+        </FONT> </TD>
+    </TR>
+  </TABLE>
+  <TABLE BORDER="0" WIDTH="500">
+    <TR> 
+      <TD WIDTH="60">Imagenes</TD>
+      <TD ALIGN="CENTER" BORDERCOLOR="#000000"> 
+        <INPUT TYPE="Text" NAME="id_foto1" VALUE="<? echo $row2[id_foto1] ?>">
+        <A HREF="fotos.html" TARGET="_blank"> ></A></TD>
+      <TD ALIGN="CENTER" BORDERCOLOR="#000000"> 
+        <INPUT TYPE="Text" NAME="id_foto2" VALUE="<? echo $row2[id_foto2] ?>">
+        <A HREF="fotos.html" TARGET="_blank"> ></A></TD>
+      <TD ALIGN="CENTER" BORDERCOLOR="#000000"> 
+        <INPUT TYPE="Text" NAME="id_foto3" VALUE="<? echo $row2[id_foto3] ?>">
+        <A HREF="fotos.html" TARGET="_blank"> ></A></TD>
+      <TD ALIGN="CENTER" BORDERCOLOR="#000000" WIDTH="100"> 
+        <INPUT TYPE="Submit" NAME="enviar" VALUE="<? if ($accion=='agregar'){ echo "AGREGAR"; }else{ echo "MODIFICAR"; } ?>">
+      </TD>
+    </TR>
+  </TABLE>
+</FORM>
+<?
+	}
+}
+
+	$result = mysql_query("SELECT * FROM noticia");  
+	$total=mysql_num_rows($result);
+	
+?> 
+<P>Total Noticias:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>&id_p=<? echo $id_p ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD> 
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956" ALIGN="CENTER"> 
+          <TD><FONT COLOR="#FFFFFF"> Modificar </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Tipo Contenido</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> T&iacute;tulo</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Nivel</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto1 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto2 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto3 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Caracteres </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Borrar </FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM noticia ORDER BY fecha_creacion LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Modificar</A></TD>
+          <TD><? echo $row->id ?></TD>
+          <TD><? echo $row->tipo_contenido ?></TD>
+          <TD><? echo $row->titulo ?></TD>
+          <TD><FONT COLOR="<? if ($row->nivel=="Principal" || $row->nivel=="Secundaria"){echo "#104956";}else{echo "#000000";} ?>"><? echo $row->nivel ?>&nbsp;</FONT></TD>
+          <TD><? echo $row->fecha_creacion ?></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto1'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto2'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto3'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <TD><? echo $row->caracteres ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+	}
+}
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<BR>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD>Referencias:<BR>
+      * Punto Aparte: <FONT COLOR="#003399">&lt;br&gt; </FONT>* Nuevo P&aacute;rrafo: 
+      <FONT COLOR="#003399">&lt;br&gt;&lt;br&gt;</FONT> * Negrita: <FONT COLOR="#003399">&lt;b&gt;</FONT>Texto 
+      Aqu&iacute;<FONT COLOR="#003399">&lt;/b&gt;</FONT> * Italica: <FONT COLOR="#003399">&lt;i&gt;</FONT><I>Texto 
+      Aqu&iacute;&lt;</I><FONT COLOR="#003399">/i&gt;</FONT> * Subrayado: <FONT COLOR="#003399">&lt;u&gt;</FONT><U>Texto 
+      Aqu&iacute;</U><FONT COLOR="#003399">&lt;/u&gt;</FONT> * Tachado: <FONT COLOR="#003399">&lt;s&gt;</FONT><S>Texto 
+      Aqu&iacute;</S><FONT COLOR="#003399">&lt;/s&gt;</FONT> </TD>
+  </TR>
+</TABLE>
+<P>&nbsp;</P>
+</BODY> 
+</HTML>

@@ -1,0 +1,154 @@
+<?
+include "../include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>E-Cards</TITLE>
+<META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+<BODY MARGINWIDTH="3" LEFTMARGIN="3" TOPMARGIN="3" MARGINHEIGHT="3" BGCOLOR="#FF7F00">
+<?
+function formulario($PHP_SELF, $nombre, $mailorigen, $maildestinatario, $destinatario, $card) {
+?> 
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000" ALIGN="center"> 
+    <TD><A HREF="#mandar"><FONT COLOR="#FFFFFF">Mand&aacute; esta E-Card a un 
+      Amigo</FONT></A></TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR> 
+    <TD> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR> 
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          <TD HEIGHT="16" BGCOLOR="#FFFFFF" ALIGN="CENTER"> 
+<FONT COLOR="#FFFFFF"><A HREF="#mandar"><IMG SRC="../img/downloads/e_cards/<? echo $card ?>.jpg" WIDTH="400" HEIGHT="320" BORDER="0"><BR>
+              </A></FONT>
+            <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR BGCOLOR="#000000"> 
+                <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+              </TR>
+            </TABLE>
+            <BR>
+            <TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR ALIGN="center"> 
+                <FORM METHOD="post" ACTION="<? echo $PHP_SELF ?>?card=<? echo $card ?>">
+                  <TD><FONT COLOR="#FFFFFF"> <A NAME="mandar"></A><FONT COLOR="#000000">Por 
+                    favor no dejes campos sin completa</FONT></FONT><FONT COLOR="#000000">r</FONT><BR>
+                    <BR>
+                    <TABLE BORDER="0" CELLSPACING="2" CELLPADDING="2">
+                      <TR ALIGN="CENTER"> 
+                        <TD><FONT COLOR="#000000"> Tu Nombre</FONT></TD>
+                        <TD><FONT COLOR="#000000">Nombre del Destinatario </FONT></TD>
+                      </TR>
+                      <TR ALIGN="CENTER"> 
+                        <TD> 
+                          <INPUT TYPE="text" NAME="nombre" VALUE="<? echo $nombre ?>" STYLE="width:170">
+                        </TD>
+                        <TD> 
+                          <INPUT TYPE="text" NAME="destinatario" VALUE="<? echo $destinatario ?>" STYLE="width:170">
+                        </TD>
+                      </TR>
+                      <TR ALIGN="CENTER"> 
+                        <TD><FONT COLOR="#000000">Tu Mail</FONT></TD>
+                        <TD><FONT COLOR="#000000">Mail del destinatario</FONT></TD>
+                      </TR>
+                      <TR ALIGN="CENTER"> 
+                        <TD> 
+                          <INPUT TYPE="text" NAME="mailorigen" VALUE="<? echo $mailorigen ?>" STYLE="width:170">
+                        </TD>
+                        <TD> 
+                          <INPUT TYPE="text" NAME="maildestinatario" VALUE="<? echo $maildestinatario ?>" STYLE="width:170">
+                        </TD>
+                      </TR>
+                    </TABLE>
+                    <BR>
+                    <INPUT TYPE="submit" NAME="Submit" VALUE="Mandar">
+                    <INPUT TYPE="reset" NAME="Submit" VALUE="Borrar">
+                  </TD>
+                </FORM>
+              </TR>
+            </TABLE>
+            <P>&nbsp; </P>
+          </TD>
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="402" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<?
+	}
+?> 
+<TABLE WIDTH="402" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR ALIGN="center"> 
+    <TD> <?
+if (!isset($nombre) && !isset($mailorigen) && !isset($maildestinatario) && !isset($destinatario)) {  
+formulario($PHP_SELF, $nombre, $mailorigen, $maildestinatario, $destinatario, $card);
+} else {
+if (empty($nombre) || empty ($mailorigen) || empty ($maildestinatario) || empty ($destinatario)) { 
+?> <B><FONT COLOR="#FFFFFF">Olvidaste completar un campo...</FONT></B> <BR>
+      <?
+formulario($PHP_SELF, $nombre, $mailorigen, $maildestinatario, $destinatario, $card);
+} else {
+if (ereg("@", "$mailorigen") && ereg("\.", "$mailorigen") && ereg("@", "$maildestinatario") && ereg("\.", "$maildestinatario")) {
+
+
+include "../include/mime_mail.inc";
+
+$filename     = "../img/downloads/e_cards/".$card.".jpg";
+$content_type = "image/jpeg";
+
+# read a JPEG picture from the disk
+$fd = fopen($filename, "r");
+$data = fread($fd, filesize($filename));
+fclose($fd);
+
+# create object instance
+$mail = new mime_mail;
+
+# set all data slots
+$mail->from    = "$mailorigen";
+$mail->to      = "$maildestinatario";
+$mail->subject = "$nombre te manda una e-card de JorgeBermudez.com";
+$mail->body    = "$destinatario: $nombre te manda una e-card de www.JorgeBermudez.com , el Sitio Oficial del Patrón.";
+
+# append the attachment
+$mail->add_attachment($data, $filename, $content_type);
+
+# send e-mail
+$mail->send();
+
+
+
+?> Gracias por utilizar las E-Cards de <B>jorgebermudez.com</B><FONT COLOR="#FFFFFF"><BR>
+      <BR>
+      El mail fue enviado correctamente a la direcci&oacute;n <? echo $maildestinatario ?>. 
+      <?
+} else {  
+?> </FONT>La direcci&oacute;n de mail no es v&aacute;lida...<BR>
+      <?
+formulario($PHP_SELF, $nombre, $mailorigen, $maildestinatario, $destinatario, $card);
+    }
+  }
+} 
+?> <BR>
+    </TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+

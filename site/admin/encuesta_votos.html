@@ -1,0 +1,219 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<BODY>
+
+<P>PatronXeneize.com -> Votos de Encuestas</P>
+
+<?
+	if (!isset($paso)){ $paso=1; }
+
+$result = mysql_query("SELECT * FROM encuesta_preguntas WHERE id='$id_p'");
+$row = mysql_fetch_array($result);
+
+
+				//empieza contabilidad;
+
+$result2 = mysql_query("select * from encuesta_votos where id_pregunta='$id_p'");
+$votos_total = mysql_num_rows($result2);
+
+$respuestas=strtok($row[respuestas], ";");
+$x=1;
+while ($respuestas){
+	$respuesta[$x]=$respuestas;
+	$respuestas=strtok(";");
+
+		$result3 = mysql_query("SELECT * FROM encuesta_votos WHERE id_pregunta='$row[id]' and voto='$respuesta[$x]'");
+		$votos_respuesta[$x] = mysql_num_rows($result3);
+		$porcen_voto[$x] = (100 * $votos_respuesta[$x] / $votos_total);
+
+	$x++;
+	}
+
+?>
+
+
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+  <TR BGCOLOR="#104956"> 
+    <TD><FONT COLOR="#FFFFFF"><? echo $row[pregunta] ?></FONT></TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+  <?
+$respuestas=strtok($row[respuestas], ";");
+$x=1;
+while ($respuestas){
+	$respuesta[$x]=$respuestas;
+	$respuestas=strtok(";");
+?> 
+  <TR BGCOLOR="#CCCCCC"> 
+    <TD WIDTH="100"><? echo $respuesta[$x] ?></TD>
+    <TD WIDTH="150"> 
+      <HR WIDTH="<? echo ($porcen_voto[$x]*1.5) ?>" SIZE="8" NOSHADE ALIGN="LEFT">
+    </TD>
+    <TD WIDTH="50" ALIGN="CENTER"><? echo floor($porcen_voto[$x]) ?>%</TD>
+  </TR>
+  <?
+	$x++;
+	}
+?> 
+</TABLE>
+
+
+
+
+<?
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que decea eliminar este registro?<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">CANCELAR</A></P>
+  </DIV>
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM encuesta_votos WHERE id = $id");
+}
+
+if ($enviar) {
+	$fecha_creacion = date ("Y-m-d");
+	$hora= date ("H-i-s"); 
+	if ($accion=="modificar"){
+			$sql="UPDATE encuesta_votos SET ip_usuario='$ip_usuario', voto='$voto' WHERE id='$id'";
+		}
+	if ($accion=="agregar"){
+		   $sql = "INSERT INTO encuesta_votos (fecha_creacion, id_pregunta, ip_usuario, voto, hora) ". "VALUES ('$fecha_creacion', '$id_p', '$ip_usuario', '$voto', '$hora')";
+		}
+   $result = mysql_query($sql);
+?>
+
+<DIV ID="Layer1" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:1; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER"> El registro de <? echo $nombre ?>&nbsp;<? echo $apellido ?> 
+    ha sido correctamente ingresado/modificado en la base de datos.<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">ACEPTAR</A></P>
+  </DIV>
+
+<?		
+}
+	$result = mysql_query("SELECT * FROM encuesta_votos WHERE id_pregunta='$id_p'");  
+	$total=mysql_num_rows($result);
+	
+?> 
+
+<P><A HREF="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">Agregar Nuevo Voto</A></P>
+<P>Total Votos:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>&id_p=<? echo $id_p ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956" ALIGN="CENTER"> 
+          <TD><FONT COLOR="#FFFFFF"> Modificar </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Usuario </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Voto</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Hora </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha Creacion</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Borrar </FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM encuesta_votos WHERE id_pregunta='$id_p' LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+
+if ($accion=="modificar" && $row->id == $id){
+	if (!$enviar){
+		$result2 = mysql_query("SELECT * FROM encuesta_votos WHERE id='$id'"); 
+		if ($result2 != 0){
+			while ($row2=mysql_fetch_object($result2)){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $id ?>&paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="MODIFICAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="ip_usuario" VALUE="<? echo $row2->ip_usuario ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="voto" VALUE="<? echo $row2->voto ?>">
+            </TD>
+            <TD BGCOLOR="#104956"> <FONT COLOR="#FFFFFF"><? echo $row->hora ?> 
+              </FONT></TD>
+            <TD ALIGN="CENTER" BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?></FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+			}
+		}
+	mysql_free_result($result2);
+	}
+}else{
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $row->id ?>&paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">Modificar</A></TD>
+          <TD ALIGN="CENTER"><? echo $row->id ?></TD>
+          <? $imas=mysql_query("SELECT pregunta FROM encuesta_preguntas WHERE id='$row->id_pregunta'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><? echo $row->ip_usuario ?></TD>
+          <TD><? echo $row->voto ?></TD>
+          <TD><? echo $row->hora ?></TD>
+          <TD ALIGN="CENTER"><? echo $row->fecha_creacion ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">Borrar</A></TD>
+        </TR>
+        <?
+			}
+		}
+   }
+
+
+
+if ($accion==agregar){
+	if (!$enviar){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>&id_p=<? echo $id_p ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="AGREGAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="ip_usuario">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="voto">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT> </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+		}
+	}
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+</BODY> 
+</HTML>

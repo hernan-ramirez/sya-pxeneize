@@ -1,0 +1,85 @@
+<? 
+
+	$sq="SELECT * FROM ".$tipo." WHERE id=".$id;
+	$not = mysql_query($sq);  
+   	$noticia = mysql_fetch_array($not);
+
+if ($formato==0){
+
+$dochtml.='
+
+<HTML>
+<HEAD>
+<TITLE>jorgebermudez.com</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF">
+<TABLE WIDTH="480" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD><IMG SRC="http://63.82.41.126/patronxeneize/site/img/general/header_mail.jpg" WIDTH="480" HEIGHT="60"></TD>
+  </TR>
+  <TR VALIGN="TOP"> 
+    <TD> 
+      <TABLE WIDTH="480" BORDER="0" CELLSPACING="0" CELLPADDING="0">';
+  $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$noticia[id_foto1]'");
+	$imasa=mysql_fetch_array($imas);
+ 
+$dochtml.='<TR> 
+          <TD VALIGN="TOP"> 
+            <TABLE WIDTH="100%" BORDER="0" CELLSPACING="2" CELLPADDING="2">
+              <TR ALIGN="CENTER"> 
+                <TD HEIGHT="25"><FONT FACE="MS Sans Serif" SIZE="1"><B>'. $noticia[titulo].
+'</B></FONT></TD>
+              </TR>
+              <TR> 
+                <TD><FONT FACE="MS Sans Serif" SIZE="1">'.
+ $noticia[texto].'
+</FONT></TD>
+              </TR>
+            </TABLE>
+          </TD>
+          <TD WIDTH="120" VALIGN="TOP"><IMG SRC="http://63.82.41.126/patronxeneize/site/img/clipart/';
+ if ($imasa[0]==""){$dochtml.='default/01.jpg';}else{$dochtml.=$imasa[0]; } 
+$dochtml.='" WIDTH="120" HEIGHT="240"></TD>
+        </TR>
+      </TABLE>
+      <BR>
+    </TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR ALIGN="CENTER"> 
+          <TD WIDTH="33%"><A HREF="http://jorgebermudez.com/"><FONT COLOR="#FFFFFF" FACE="MS Sans Serif" SIZE="1" STYLE="text-decoration: none">Jorgebermudez.com</FONT></A></TD>
+          <TD WIDTH="33%"><A HREF="http://63.82.41.126/patronxeneize/site/';
+if ($tipo=="noticia"){
+$dochtml.='periodistica/index.html?id='.$noticia[id].'&inc=nota&tipo='. $tipo;
+}else{
+$dochtml.='comunidad/sorteos.html';
+}
+$dochtml.='" TARGET="_blank"><FONT COLOR="#FFFFFF" FACE="MS Sans Serif" SIZE="1" STYLE="text-decoration: none">Ver 
+            en sitio</FONT></a></TD>
+          <TD WIDTH="33%"><A HREF="http://63.82.41.126/patronxeneize/site/';
+if ($tipo=="noticia"){
+$dochtml.='periodistica/index.html?inc=mas&tipo='. $tipo;
+}else{
+$dochtml.='comunidad/sorteos.html';
+}
+$dochtml.='" TARGET="_blank"><FONT COLOR="#FFFFFF" FACE="MS Sans Serif" SIZE="1" STYLE="text-decoration: none">Ver 
+            más</FONT></a></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>
+
+
+ '; 
+}else{
+	$tit.=ltrim(html2text($noticia[titulo]));
+	$text.=ltrim(html2text($noticia[texto]));
+	$dochtml="$tit\n\n $text";
+}
+?>

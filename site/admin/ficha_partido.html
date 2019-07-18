@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<TITLE>Ficha del Partido</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="include/admin_style.css">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LEFTMARGIN="2" TOPMARGIN="2" MARGINWIDTH="2" MARGINHEIGHT="2">
+<? 
+include "include/db_connect.inc";
+
+$part=mysql_query("SELECT * FROM partidos WHERE id=$idpart");
+$partido=mysql_fetch_array($part);
+
+$camp=mysql_query("SELECT * FROM partidos_campeonato WHERE id=$partido[campeonato]");
+$campeonato=mysql_fetch_array($camp);
+
+$equi=mysql_query("SELECT * FROM partidos_equipos WHERE id=$partido[equipo]");
+$equipos=mysql_fetch_array($equi);
+
+$riv=mysql_query("SELECT * FROM partidos_equipos WHERE id=$partido[rival]");
+$rival=mysql_fetch_array($riv);
+
+$equipo[1]=$equipos[equipo];
+$equipo[2]=$rival[equipo];
+$id_equipo[1]=$equipos[id];
+$id_equipo[2]=$rival[id];
+
+$goles=strtok($partido[resultado], "-");
+$x=1;
+while ($goles){
+	$totalgoles[$x]=$goles;
+	$goles=strtok("-");
+	$x++;
+}
+
+if($enviar){
+
+for ($y=1;$y<=2;++$y){
+	for ($x=1;$x<=11;++$x){
+		$jugadores[$y].=$j[$y.$x]."-";
+	}
+	for ($x=1;$x<=$totalgoles[$y];++$x){
+		$goleadores[$y].=$g[$y.$x]."-";
+	}
+	//echo $jugadores[$y]."<br>";
+	//echo $goleadores[$y]."<br>";
+}
+
+
+$sql="UPDATE partidos SET jugadores1='$jugadores[1]', jugadores2='$jugadores[2]', goleadores1='$goleadores[1]', goleadores2='$goleadores[2]', estadio='$estadio', arbitro='$arbitro', lineas='$lineas' WHERE id='$idpart'";
+mysql_query($sql);
+?>El registro fué guardado <A HREF="#" onClick="javascript:window.close()">Cerrar</A><?
+$part=mysql_query("SELECT * FROM partidos WHERE id=$idpart");
+$partido=mysql_fetch_array($part);
+}
+
+for ($y=1;$y<=2;++$y){
+$juga=strtok($partido[jugadores.$y], "-");
+$x=1;
+while ($juga){
+	$j[$y.$x]=$juga;
+	$juga=strtok("-");
+	$x++;
+}
+}
+
+for ($y=1;$y<=2;++$y){
+$gola=strtok($partido[goleadores.$y], "-");
+$x=1;
+while ($gola){
+	$g[$y.$x]=$gola;
+	$gola=strtok("-");
+	$x++;
+}
+}
+?> 
+<FORM NAME="ficha" METHOD="post" ACTION="<? echo $PHP_SELF ?>?idpart=<? echo $idpart ?>">
+  <TABLE WIDTH="400" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+    <TR BGCOLOR="#CCCCCC"> 
+      <TD WIDTH="13%" ALIGN="RIGHT">Torneo:</TD>
+      <TD WIDTH="87%"> <? echo $campeonato[campeonato] ?> </TD>
+    </TR>
+    <TR BGCOLOR="#CCCCCC"> 
+      <TD WIDTH="13%" ALIGN="RIGHT">Fecha:</TD>
+      <TD WIDTH="87%"> <? echo $partido[fecha_partido] ?> </TD>
+    </TR>
+  </TABLE>
+  <TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+    <TR BGCOLOR="#000000"> <? for ($y=1;$y<=2;++$y){ ?> 
+      <TD WIDTH="50%" VALIGN="TOP"> 
+        <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+          <TR BGCOLOR="#104956"> 
+            <TD WIDTH="100%" ALIGN="CENTER" COLSPAN="2"><FONT COLOR="#FFFFFF"> 
+              <? echo $equipo[$y] ?></FONT></TD>
+          </TR>
+          <TR BGCOLOR="#CCCCCC" ALIGN="CENTER"> 
+            <TD WIDTH="100%" BGCOLOR="#CCCCCC" COLSPAN="2">Formaci&oacute;n</TD>
+          </TR>
+          <? for ($x=1;$x<=11;++$x){ ?> 
+          <TR BGCOLOR="#EEEEEE"> 
+            <TD WIDTH="10%" ALIGN="CENTER"><? echo $x ?>)&nbsp; </TD>
+            <TD WIDTH="90%" ALIGN="CENTER">
+              <SELECT NAME="j[<? echo $y ?><? echo $x ?>]">
+                <OPTION>..</OPTION>
+                <? 
+$jug=mysql_query("SELECT * FROM jugadores WHERE equipo=$id_equipo[$y] ORDER BY apellido");
+while($row=mysql_fetch_object($jug)){
+?>  
+                <OPTION VALUE="<? echo $row->id ?>" <? if($row->id==$j[$y.$x]){ echo "SELECTED"; } ?>><? echo $row->apellido." ".$row->nombre ?></OPTION>
+                <? } ?> 
+              </SELECT>
+            </TD>
+          </TR>
+          <? } ?> 
+          <TR BGCOLOR="#CCCCCC"> 
+            <TD WIDTH="100%" ALIGN="CENTER" COLSPAN="2">Goleadores</TD>
+          </TR>
+          <? for ($x=1;$x<=$totalgoles[$y];++$x){ ?> 
+          <TR BGCOLOR="#EEEEEE"> 
+            <TD WIDTH="10%" ALIGN="CENTER"><? echo $x ?>)&nbsp; </TD>
+            <TD WIDTH="90%" ALIGN="CENTER"> 
+              <SELECT NAME="g[<? echo $y ?><? echo $x ?>]">
+                <OPTION>..</OPTION>
+                <? 
+$jug=mysql_query("SELECT * FROM jugadores WHERE equipo=$id_equipo[$y] ORDER BY apellido");
+while($row=mysql_fetch_object($jug)){
+?>  
+                <OPTION VALUE="<? echo $row->id ?>" <? if($row->id==$g[$y.$x]){ echo "SELECTED"; } ?>><? echo $row->apellido." ".$row->nombre ?></OPTION>
+                <? } ?> 
+              </SELECT>
+            </TD>
+            <? } ?> </TR>
+        </TABLE>
+      </TD>
+      <? } ?> </TR>
+  </TABLE>
+  <TABLE WIDTH="400" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+<TR BGCOLOR="#CCCCCC"> 
+    <TD WIDTH="13%" ALIGN="RIGHT">Estadio:</TD>
+    <TD WIDTH="87%"> 
+        <INPUT TYPE="text" NAME="estadio" VALUE="<? echo $partido[estadio] ?>">
+    </TD>
+  </TR>
+  <TR BGCOLOR="#CCCCCC"> 
+    <TD WIDTH="13%" ALIGN="RIGHT">Arbitro:</TD>
+    <TD WIDTH="87%"> 
+        <INPUT TYPE="text" NAME="arbitro" VALUE="<? echo $partido[arbitro] ?>">
+    </TD>
+  </TR>
+  <TR BGCOLOR="#CCCCCC"> 
+    <TD WIDTH="13%" ALIGN="RIGHT">Lineas:</TD>
+    <TD WIDTH="87%"> 
+        <INPUT TYPE="text" NAME="lineas" VALUE="<? echo $partido[lineas] ?>">
+    </TD>
+  </TR>
+  
+</TABLE>
+  <TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+    <TR ALIGN="CENTER"> 
+      <TD WIDTH="33%">&nbsp; </TD>
+      <TD WIDTH="33%">
+        <INPUT TYPE="submit" NAME="enviar" VALUE="Aceptar">
+      </TD>
+      <TD WIDTH="33%">&nbsp;</TD>
+    </TR>
+  </TABLE>
+</FORM>
+</BODY>
+</HTML>

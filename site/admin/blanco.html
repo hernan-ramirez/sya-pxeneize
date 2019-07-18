@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<TITLE>Untitled Document</TITLE>
+<META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+timeID = 5;
+stcnt = 11;
+msg = "<< Realizado por Esteban Raffo Q. , Hernán Principe y Hernán Javier Ramirez >>";
+wmsg = new Array(33);
+wmsg[0] = msg;
+blnk = "                                                               ";
+for (i = 1; i < 32; i++) {
+b = blnk.substring(0, i);
+wmsg[i] = "";
+for (j = 0; j < msg.length; j++) wmsg[i] = wmsg[i] + msg.charAt(j) + b;
+}
+function wiper() {
+if (stcnt > -1) str = wmsg[stcnt]; 
+else str = wmsg[0];
+if (stcnt-- < -40) stcnt = 31;
+status = str;
+clearTimeout(timeID);
+timeID = setTimeout("wiper()", 150);
+}
+//  End -->
+</SCRIPT>
+
+</HEAD>
+
+<BODY onLoad="wiper()">
+</BODY>
+</HTML>

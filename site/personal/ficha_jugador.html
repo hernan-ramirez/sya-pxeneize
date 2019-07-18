@@ -1,0 +1,95 @@
+<?
+include "../include/db_connect.inc";
+?>
+<HTML>
+<HEAD>
+<TITLE>Ficha</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+
+<BODY BGCOLOR="#FF7F00" LEFTMARGIN="3" TOPMARGIN="3" MARGINWIDTH="3" MARGINHEIGHT="3">
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000" ALIGN="center"> 
+    <TD>Ficha de Jugador</TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR> 
+    <TD> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR> 
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          <TD HEIGHT="16" BGCOLOR="#FFFFFF" ALIGN="CENTER"> <BR>
+<?
+$jug=mysql_query("SELECT * FROM jugadores WHERE id='$idjug'");
+$jugador=mysql_fetch_array($jug); 
+?>
+            <TABLE WIDTH="370" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967"> 
+                  <P>Nombre</P>
+                </TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[nombre] ?> 
+                  <? echo $jugador[apellido] ?> </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Fecha de nacimiento</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[fecha_nacimiento] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Lugar</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[lugar_nacimiento] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Puesto</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[puesto] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">N&uacute;mero</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[numero] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Altura</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[altura] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Peso</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[peso] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Debut en Primera</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[debut_en_primera] ?></TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Debut en Boca</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[debut_en_boca ] ?></TD>
+              </TR>
+              <TR>
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">Trayectoria</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[trayectoria ] ?></TD>
+              </TR>
+              <TR>
+                <TD WIDTH="120" VALIGN="top" BGCOLOR="#323967">T&iacute;tulos</TD>
+                <TD WIDTH="250" VALIGN="top" BGCOLOR="#FF9900"><? echo $jugador[titulos] ?></TD>
+              </TR>
+            </TABLE>  <BR>
+          </TD>
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>

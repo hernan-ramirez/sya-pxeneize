@@ -1,0 +1,539 @@
+<?
+include "../include/db_connect.inc";
+
+$usuario = escapeshellcmd($usuario);
+$password = crypt($contrasena);
+
+	$fecha_creacion = date ("Y-m-d"); 
+	$fecha_nacimiento="$anio"."-"."$mes"."-"."$dia";
+
+$datos = array(
+	"nombre" => "$nombre",
+	"apellido" => "$apellido",
+	"usuario" => "$usuario",
+	"contrasena" => "$contrasena",
+	"confirmacion" => "$confirmacion",
+	"fecha_nacimiento" => "$fecha_nacimiento",
+	"sexo" => "$sexo",
+	"ciudad" => "$ciudad",
+	"domicilio_pais" => "$domicilio_pais",
+	"checkmail" => "$checkmail",
+	"domicilio_calle" => "$domicilio_calle",
+	"domicilio_cp" => "$domicilio_cp",
+	"telefono" => "$telefono",
+	"domicilio_localidad" => "$domicilio_localidad",
+	"ocupacion" => "$ocupacion",
+	"lugar_conexion" => "$lugar_conexion",
+	"horario_conexion" => "$horario_conexion",
+	"uso" => "$uso",
+	"noticias_patronxeneize" => "$noticias_patronxeneize",
+	"noticias_sya" => "$noticias_sya",
+	"noticias_terceros" => "$noticias_terceros",
+	"email" => "$email",
+	"compras" => "$compras",
+	"credito" => "$credito",
+	"encuesta" => "$encuesta",
+	"hincha_de" => "$hincha_de",
+	"icq" => "$icq",
+	"anio" => "$anio",
+	"mes" => "$mes",
+	"publicar" => "$publicar",
+	"dia" => "$dia"
+	);
+?>
+
+<HTML>
+<HEAD>
+<TITLE>Registrate como Hincha</TITLE>
+<META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+<? include "../include/openwindow.inc"; ?>
+<BODY LEFTMARGIN="3" TOPMARGIN="3" MARGINWIDTH="3" MARGINHEIGHT="3" BGCOLOR="#FF7F00">
+<? 
+function formulario($PHP_SELF, $datos) {
+?> 
+<TABLE WIDTH="400" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <TR ALIGN="center"> 
+      
+    <TD BGCOLOR="#000000" > 
+      <P>Formulario de registraci&oacute;n</P>
+      </TD>
+    </TR>
+    <TR ALIGN="center">
+      <TD ><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+    </TR>
+  </TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <FORM NAME="form" ACTION="<?  echo $PHP_SELF ?>"> 
+          <TR> 
+            <TD WIDTH="1" BGCOLOR="#000000"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+            <TD WIDTH="398"> 
+              <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR BGCOLOR="#000000"> 
+                  <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                </TR>
+                <TR BGCOLOR="#FFFFFF" ALIGN="CENTER"> 
+                  <TD><FONT COLOR="#000000"><BR>
+              A partir de ahora, pasar&aacute;s a ser uno de los nuevos miembros 
+              de <B><FONT COLOR="#323967">jorgebermudez.com</FONT></B>. Te damos 
+              la bienvenida y con mucha alegr&iacute;a esperamos que disfrutes 
+              de los servicios de este nuevo sitio. <BR>
+                    Por favor, llena todos los campos que aparecen a continuaci&oacute;n.<BR>
+                    <BR>
+                    </FONT>
+                    <TABLE BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Nombre</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="nombre" SIZE="20" VALUE="<?  echo $datos["nombre"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Apellido</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="apellido" SIZE="20" VALUE="<?  echo $datos["apellido"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Nombre de usuario</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="usuario" SIZE="20" VALUE="<?  echo $datos["usuario"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Contrase&ntilde;a</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="password" NAME="contrasena" SIZE="20" VALUE="<?  echo $datos["contrasena"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Confirmar Contrase&ntilde;a</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="password" NAME="confirmacion" SIZE="20" VALUE="<?  echo $datos["confirmacion"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Fecha de Nacimiento</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <SELECT NAME="dia">
+                            <? 
+		$dia = 1;
+while ($dia < 32) {
+		if ($datos[dia] == $dia) {
+		echo "<option value=\"$dia\" selected>$dia</option>\n";
+		} else {
+		echo "<option value=\"$dia\">$dia</option>\n";
+		}
+		$dia ++;
+		}
+	        ?> 
+                          </SELECT>
+                          <SELECT NAME="mes">
+                            <? 
+		$mes = 1;
+while ($mes < 13) {
+		if($datos[mes] == $mes) {
+		echo "<option value=\"$mes\" selected>$mes</option>\n";
+		} else {
+		echo "<option value=\"$mes\">$mes</option>\n";
+		}
+		$mes ++;
+		}
+	        ?> 
+                          </SELECT>
+                          <SELECT NAME="anio">
+                            <? 
+		$anio = 2000;
+while ($anio > 1919) {
+		if ($datos[anio] == $anio) {
+		echo "<option value="."$anio"." selected>"."$anio"."</option>";
+		} else {
+		echo "<option value="."$anio".">"."$anio"."</option>";
+		}
+		$anio --;
+		}
+	        ?> 
+                          </SELECT>
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Sexo</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="radio" NAME="sexo" VALUE="M" <? if ($datos[sexo]=="M"){ echo "CHECKED";} ?>>
+                          Masculino 
+                          <INPUT TYPE="radio" NAME="sexo" VALUE="F" <? if ($datos[sexo]=="F"){ echo "CHECKED";} ?>>
+                          Femenino* </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Ciudad</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="ciudad" SIZE="20" VALUE="<?  echo $datos["ciudad"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Pa&iacute;s</FONT></TD>
+                        <TD > <FONT COLOR="#000000">
+                          <SELECT NAME="domicilio_pais">
+                            <OPTION VALUE="....">....</OPTION>
+                            <OPTION VALUE="argentina" <? if ($datos[domicilio_pais]=='argentina'){ echo "SELECTED"; }?>>Argentina</OPTION>
+                            <OPTION VALUE="otro" <? if ($datos[domicilio_pais]=='otro'){ echo "SELECTED"; }?>>Otro</OPTION>
+                            <OPTION VALUE="bolivia" <? if ($datos[domicilio_pais]=='bolivia'){ echo "SELECTED"; }?>>Bolivia</OPTION>
+                            <OPTION VALUE="brasil" <? if ($datos[domicilio_pais]=='brasil'){ echo "SELECTED"; }?>>Brasil</OPTION>
+                            <OPTION VALUE="chile" <? if ($datos[domicilio_pais]=='chile'){ echo "SELECTED"; }?>>Chile</OPTION>
+                            <OPTION VALUE="colombia" <? if ($datos[domicilio_pais]=='colombia'){ echo "SELECTED"; }?>>Colombia</OPTION>
+                            <OPTION VALUE="paraguay" <? if ($datos[domicilio_pais]=='paraguay'){ echo "SELECTED"; }?>>Paraguay</OPTION>
+                            <OPTION VALUE="peru" <? if ($datos[domicilio_pais]=='peru'){ echo "SELECTED"; }?>>Perú</OPTION>
+                            <OPTION VALUE="uruguay" <? if ($datos[domicilio_pais]=='uruguay'){ echo "SELECTED"; }?>>Uruguay</OPTION>
+                            <OPTION VALUE="venezuela" <? if ($datos[domicilio_pais]=='venezuela'){ echo "SELECTED"; }?>>Venezuela</OPTION>
+                          </SELECT>
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">e-mail</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="email" SIZE="20" VALUE="<?  echo $datos["email"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Hincha de</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="hincha_de" SIZE="20" VALUE="<?  echo $datos["hincha_de"] ?>">
+                          * </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD>&nbsp;</TD>
+                        <TD>&nbsp;</TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Direcci&oacute;n</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="domicilio_calle" SIZE="20" VALUE="<?  echo $datos[domicilio_calle] ?>">
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">C&oacute;digo 
+                          Postal</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="domicilio_cp" SIZE="20" VALUE="<?  echo $datos[domicilio_cp] ?>">
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Tel&eacute;fono</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="telefono" SIZE="20" VALUE="<?  echo $datos[telefono] ?>">
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Localidad</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="domicilio_localidad" SIZE="20" VALUE="<? echo $datos[domicilio_localidad] ?>">
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">N&ordm; de ICQ</FONT></TD>
+                        <TD > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="text" NAME="icq" SIZE="20" VALUE="<? echo $datos[icq] ?>">
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Ocupaci&oacute;n</FONT></TD>
+                        <TD > <FONT COLOR="#000000">
+                          <SELECT NAME="ocupacion">
+                            <OPTION VALUE="....">....</OPTION>
+                            <OPTION VALUE="profesional" <? if ($datos[ocupacion]=='profesional'){ echo "SELECTED"; }?>>Profesional</OPTION>
+                            <OPTION VALUE="empleado" <? if ($datos[ocupacion]=='empleado'){ echo "SELECTED"; }?>>Empleado</OPTION>
+                            <OPTION VALUE="comerciante" <? if ($datos[ocupacion]=='comerciante'){ echo "SELECTED"; }?>>Comerciante</OPTION>
+                            <OPTION VALUE="autonomo" <? if ($datos[ocupacion]=='autonomo'){ echo "SELECTED"; }?>>Aut&oacute;nomo</OPTION>
+                            <OPTION VALUE="estudiante" <? if ($datos[ocupacion]=='estudiante'){ echo "SELECTED"; }?>>Estudiante</OPTION>
+                            <OPTION VALUE="otro" <? if ($datos[ocupacion]=='otro'){ echo "SELECTED"; }?>>Otra</OPTION>
+                          </SELECT>
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Lugar de Conexi&oacute;n</FONT></TD>
+                        <TD > <FONT COLOR="#000000">
+                          <SELECT NAME="lugar_conexion">
+                            <OPTION VALUE="....">....</OPTION>
+                            <OPTION VALUE="casa" <? if ($datos[lugar_conexion]=='casa'){ echo "SELECTED"; }?>>Casa 
+                            </OPTION>
+                            <OPTION VALUE="trabajo" <? if ($datos[lugar_conexion]=='trabajo'){ echo "SELECTED"; }?>>Trabajo 
+                            </OPTION>
+                            <OPTION VALUE="lugare publico" <? if ($datos[lugar_conexion]=='lugare publico'){ echo "SELECTED"; }?>>Lugar 
+                            P&uacute;blico</OPTION>
+                            <OPTION VALUE="casa de estudios" <? if ($datos[lugar_conexion]=='casa de estudios'){ echo "SELECTED"; }?>>Casa 
+                            de Estudios</OPTION>
+                          </SELECT>
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#000000">Horario de Conexi&oacute;n</FONT></TD>
+                        <TD > <FONT COLOR="#000000">
+                          <SELECT NAME="horario_conexion">
+                            <OPTION VALUE="....">....</OPTION>
+                            <OPTION VALUE="mañana" <? if ($datos[horario_conexion]=='mañana'){ echo "SELECTED"; }?>>Ma&ntilde;ana</OPTION>
+                            <OPTION VALUE="tarde" <? if ($datos[horario_conexion]=='tarde'){ echo "SELECTED"; }?>>Tarde</OPTION>
+                            <OPTION VALUE="noche" <? if ($datos[horario_conexion]=='noche'){ echo "SELECTED"; }?>>Noche</OPTION>
+                          </SELECT>
+                          </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD  ALIGN="right"><FONT COLOR="#323967"><B>Publicar tus 
+                          Datos</B></FONT></TD>
+                        <TD > 
+                          <SELECT NAME="publicar">
+                            <OPTION VALUE="....">....</OPTION>
+                            <OPTION VALUE="si" <? if ($datos[publicar]=='si'){ echo "SELECTED"; }?>>si</OPTION>
+                            <OPTION VALUE="no" <? if ($datos[publicar]=='no'){ echo "SELECTED"; }?>>no</OPTION>
+                          </SELECT>
+                    <A HREF="javascript:openwin('condiciones.html','condiciones','width=422,height=250,scrollbars=1')"><FONT COLOR="#323967"><B>Lee 
+                    Condiciones...</B></FONT></A></TD>
+                      </TR>
+                    </TABLE>
+                    <FONT COLOR="#000000"> <BR>
+                    </FONT>
+                    <P><FONT COLOR="#000000"> 
+                      <INPUT TYPE="checkbox" NAME="noticias_patronxeneize" VALUE="si" <?  if ($datos[noticias_patronxeneize]=='si'){ echo "checked"; }?>>
+                Quiero recibir las noticias de Jorge Berm&uacute;dez<BR>
+                      <INPUT TYPE="checkbox" NAME="noticias_sya" VALUE="si" <?  if ($datos[noticias_sya]=='si'){ echo "checked"; }?>>
+                      Quiero recibir las noticias de SportsYA!<BR>
+                      <INPUT TYPE="checkbox" NAME="noticias_terceros" VALUE="si" <?  if ($datos[noticias_terceros]=='si'){ echo "checked"; }?>>
+                Quiero recibir noticias de Terceros <BR>
+                      <BR>
+                      </FONT> </P>
+                    <TABLE WIDTH="350" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                      <TR> 
+                        <TD WIDTH="300"  ALIGN="right"><FONT COLOR="#000000">&iquest;Acostumbra 
+                          a hacer compras por internet?</FONT></TD>
+                        <TD WIDTH="100" > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="radio" NAME="compras" VALUE="si" <?  if ($datos[compras]=='si'){ echo "checked"; }?>>
+                          Si 
+                          <INPUT TYPE="radio" NAME="compras" VALUE="no" <?  if ($datos[compras]=='no'){ echo "checked"; }?>>
+                          No </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD WIDTH="300"  ALIGN="right"><FONT COLOR="#000000">&iquest;Posee 
+                          tarjeta de cr&eacute;dito?</FONT></TD>
+                        <TD WIDTH="100" > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="radio" NAME="credito" VALUE="si" <?  if ($datos[credito]=='si'){ echo "checked"; }?>>
+                          Si 
+                          <INPUT TYPE="radio" NAME="credito" VALUE="no" <?  if ($datos[credito]=='no'){ echo "checked"; }?>>
+                          No </FONT></TD>
+                      </TR>
+                      <TR> 
+                        <TD WIDTH="300"  ALIGN="right"><FONT COLOR="#000000">&iquest;Usted 
+                          est&aacute; de acuerdo a responder encuestas por internet?</FONT></TD>
+                        <TD WIDTH="100" > <FONT COLOR="#000000"> 
+                          <INPUT TYPE="radio" NAME="encuesta" VALUE="si" <?  if ($datos[encuesta]=='si'){ echo "checked"; }?>>
+                          Si 
+                          <INPUT TYPE="radio" NAME="encuesta" VALUE="no" <?  if ($datos[encuesta]=='no'){ echo "checked"; }?>>
+                          No </FONT></TD>
+                      </TR>
+                    </TABLE>
+                    
+              <BR>
+              <TABLE WIDTH="90%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                <TR ALIGN="CENTER"> 
+                  <TD><FONT COLOR="#000000"><FONT FACE="MS Sans Serif" SIZE="1">El 
+                    Usuario declara haber leído previamente la POLÍTICA DE PROTECCIÓN 
+                    DE DATOS del Sitio Oficial de Jorge Berm&uacute;dez., publicada en 
+                    la URL <B>jorgebermudez.com</B> y declara aceptar plenamente 
+                    y sin reservas que los datos de carácter personal que proporciona 
+                    con ocasión de su suscripción al presente servicio serán incorporados 
+                    a un fichero automatizado y tratados en la forma indicada 
+                    en la POLÍTICA DE PROTECCIÓN DE DATOS del Sitio Oficial de 
+                    Jorge Berm&uacute;dez.<BR>
+                    </FONT></FONT> <FONT COLOR="#000000"><BR>
+                    * Campos que deben llenarse obligatoriamente.<BR>
+                    </FONT></TD>
+                </TR>
+              </TABLE>
+              <FONT COLOR="#000000"><BR>
+              </FONT><FONT COLOR="#000000"><BR>
+                    <INPUT TYPE="submit" VALUE="Enviar Formulario" NAME="submit">
+                    <INPUT TYPE="reset" NAME="Submit" VALUE="Borrar">
+                    </FONT><BR>
+                  </TD>
+                </TR>
+              </TABLE>
+            </TD>
+            <TD WIDTH="1" BGCOLOR="#000000"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          </TR></FORM>
+        </TABLE>
+
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<? 
+}
+
+//comprovacion;
+if ($submit){
+
+	if ($nombre=="" || $apellido=="" || $usuario=="" || $contrasena=="" || $sexo=="" || $domicilio_pais=="" || $email=="" || $hincha_de=="" ) {
+?>
+<TABLE WIDTH="400" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+  <TR ALIGN="center"> 
+    <TD BGCOLOR="#000000">Olvido completar algun campo.</TD>
+  </TR>
+  <TR ALIGN="center"> 
+    <TD ><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+<?
+	formulario($PHP_SELF, $datos);
+
+	} else {
+
+		mysql_query("select * from registrate where usuario='$usuario'");
+		if (mysql_affected_rows() == "1") {
+?>  
+<TABLE WIDTH="400" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+  <TR ALIGN="center"> 
+    <TD BGCOLOR="#000000">El usuario que ha elegido ya existe. Ponga otro por 
+      favor.</TD>
+  </TR>
+  <TR ALIGN="center"> 
+    <TD ><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+<? 
+		formulario($PHP_SELF, $datos);
+
+	} elseif ($contrasena != $confirmacion)  {
+?>
+<TABLE WIDTH="400" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+  <TR ALIGN="center"> 
+    <TD BGCOLOR="#000000">Las claves no coinciden.</TD>
+  </TR>
+  <TR ALIGN="center"> 
+    <TD ><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+<? 
+				formulario($PHP_SELF, $datos);
+
+			} elseif (ereg("@", "$email") && ereg("\.", "$email")) {
+
+		   					$sql ="INSERT INTO registrate (fecha_creacion, nombre, apellido, fecha_nacimiento, usuario, contrasena, hincha_de, email, ocupacion, telefono, domicilio_calle, domicilio_localidad, domicilio_cp, domicilio_pais, sexo, lugar_conexion, horario_conexion, noticias_sya, noticias_patronxeneize, noticias_terceros, compras, credito, encuesta, icq, publicar) ". "VALUES ('$fecha_creacion', '$nombre', '$apellido', '$fecha_nacimiento', '$usuario', '$contrasena', '$hincha_de', '$email', '$ocupacion', '$telefono', '$domicilio_calle', '$domicilio_localidad', '$domicilio_cp', '$domicilio_pais', '$sexo', '$lugar_conexion', '$horario_conexion', '$noticias_sya', '$noticias_patronxeneize', '$noticias_terceros', '$compras', '$credito', '$encuesta', '$icq', '$publicar')";
+							mysql_query($sql);
+?>
+  
+<TABLE WIDTH="400" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+  <TR ALIGN="center" BGCOLOR="#000000"> 
+    <TD>Formulario de registraci&oacute;n</TD>
+  </TR>
+  <TR ALIGN="center"> 
+    <TD ><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <FORM NAME="form" ACTION="<?  echo $PHP_SELF ?>">
+    <TR> 
+      <TD WIDTH="1" BGCOLOR="#000000"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+      <TD WIDTH="398"> 
+        <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+          <TR BGCOLOR="#000000"> 
+            <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          </TR>
+          <TR BGCOLOR="#FFFFFF" ALIGN="CENTER"> 
+            <TD><FONT COLOR="#000000"><BR>
+              </FONT>
+              <TABLE WIDTH="90%" BORDER="0" CELLSPACING="2" CELLPADDING="2">
+                <TR ALIGN="center"> 
+                  <TD><FONT COLOR="#000000">Gracias por registrarse en <B>jorgebermudez.com</B> 
+                    , a partir de ahora usted puede:</FONT></TD>
+                </TR>
+                <?
+							if ($noticias_patronxeneize == "si") {
+?> 
+                <TR ALIGN="center"> 
+                  <TD> 
+                    <LI><FONT COLOR="#000000"> Recibir las &uacute;ltimas noticias 
+                      de Jorge Berm&uacute;dez y Boca Juniors. <BR>
+                      </FONT> 
+                  </TD>
+                </TR>
+                <? 
+							}
+
+							if ($noticias_sya == "si") {
+?> 
+                <TR ALIGN="center"> 
+                  <TD> 
+                    <LI><FONT COLOR="#000000"> Recibir las &uacute;ltimas noticias 
+                      de SportsYA!. <BR>
+                      </FONT> 
+                  </TD>
+                </TR>
+                <? 
+							}
+
+							if ($noticias_terceros == "si") {
+?> 
+                <TR ALIGN="center"> 
+                  <TD> 
+                    <LI><FONT COLOR="#000000"> Recibir noticias de terceros. <BR>
+                      </FONT> 
+                  </TD>
+                </TR>
+                <? 
+							}
+?> 
+                <TR ALIGN="center"> 
+                  <TD> 
+                    <LI><FONT COLOR="#000000"> Acceder a la sala de chat ingresar 
+                      en los foros de discusión.<BR>
+                      </FONT> 
+                  </TD>
+                </TR>
+                <TR ALIGN="center"> 
+                  <TD>
+                      <LI><FONT color="#000000"> participar de sorteos en jorge<B>bermudez</B>.com<BR></FONT></LI>
+                  </TD>
+                </TR>
+              </TABLE>
+              <BR>
+            </TD>
+          </TR>
+        </TABLE>
+      </TD>
+      <TD WIDTH="1" BGCOLOR="#000000"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+    </TR>
+  </FORM>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="399"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<? 
+	
+					}else{
+?>
+<TABLE WIDTH="400" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+  <TR ALIGN="center" BGCOLOR="#000000"> 
+    <TD>Ponga bien su direcci&oacute;n de E-Mail.</TD>
+  </TR>
+  <TR ALIGN="center"> 
+    <TD ><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+<?
+
+							formulario($PHP_SELF, $datos);
+					}
+			}
+
+
+}else{
+formulario($PHP_SELF, $datos);
+}
+?> 
+</BODY>
+</HTML>

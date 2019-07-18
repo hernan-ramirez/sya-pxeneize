@@ -1,0 +1,253 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function openwin(theURL,winName,features) {
+  window.open(theURL,winName,features);
+} 
+
+function showImage (url, name, w, h) {	
+	var n3 = (navigator.appName.indexOf('Netscape')!=-1 && navigator.appVersion.indexOf('3.')!=-1)?true:false;
+	var ww = (n3)?(parseInt(w)+20):parseInt(w);
+	var wh = (n3)?(parseInt(h)+20):parseInt(h);
+	var winname = (name.indexOf(' ')!=-1)?name.substring(0, name.indexOf(' ')):name;
+	var wnd = window.open('', winname, 'width='+ww+',height='+(wh+0));
+	var code =  "<html><head>\n" +
+				"<title>" + name + "</title></head>\n" +
+				"<body bgcolor=#000000 text=#CCCCCC marginwidth=0 marginheight=0 leftmargin=0 topmargin=0>\n" +
+				"<center><img src=\"" + url + "\"><br>\n" +
+				"</center></body></html>"
+	wnd.document.write(code);
+	wnd.document.close();
+}
+
+-->
+</SCRIPT>
+<BODY>
+
+<P>PatronXeneize.com -> Personajes</P>
+
+
+
+
+<?
+	if (!isset($paso)){ $paso=1; }
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que decea eliminar este registro?<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+  </DIV>
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM personaje WHERE id = $id");
+}
+
+if ($enviar) {
+	$fecha_creacion = date ("Y-m-d"); 
+	if ($accion=="modificar"){
+			$sql="UPDATE personaje SET nombre='$nombre', apellido='$apellido', fecha_nacimiento='$fecha_nacimiento', lugar_nacimiento='$lugar_nacimiento', hincha_de='$hincha_de', mail='$mail', ocupacion='$ocupacion', id_foto1='$id_foto1', id_foto2='$id_foto2', id_foto3='$id_foto3' WHERE id='$id'";
+		}
+	if ($accion==agregar){
+		   $sql = "INSERT INTO personaje (fecha_creacion, nombre, apellido, fecha_nacimiento, lugar_nacimiento, hincha_de, mail, ocupacion, id_foto1, id_foto2, id_foto3) ". "VALUES ('$fecha_creacion', '$nombre', '$apellido', '$fecha_nacimiento', '$lugar_nacimiento', '$hincha_de', '$mail', '$ocupacion', '$id_foto1', '$id_foto2', '$id_foto3')";
+		}
+   $result = mysql_query($sql);
+?>
+
+<DIV ID="Layer1" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:1; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER"> El registro de <? echo $nombre ?>&nbsp;<? echo $apellido ?> 
+    ha sido correctamente ingresado/modificado en la base de datos.<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">ACEPTAR</A></P>
+  </DIV>
+
+<?		
+}
+	$result = mysql_query("SELECT * FROM personaje");  
+	$total=mysql_num_rows($result);
+	
+?> 
+
+<P><A HREF="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">Agregar 
+  Nuevo Personaje</A></P>
+<P>Total Personajes:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+
+<TABLE WIDTH="1300" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956" ALIGN="CENTER"> 
+          <TD><FONT COLOR="#FFFFFF"> Modificar </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Apellido </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Nombre </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha Nac. </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Lugar Nac. </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Hincha </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Mail </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Ocupaci&oacute;n </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto1 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto2 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto3 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha Creacion</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Borrar </FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM personaje ORDER BY apellido LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+
+if ($accion=="modificar" && $row->id == $id){
+	if (!$enviar){
+		$result2 = mysql_query("SELECT * FROM personaje WHERE id='$id'"); 
+		if ($result2 != 0){
+			while ($row2=mysql_fetch_object($result2)){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $id ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="MODIFICAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="apellido" VALUE="<? echo $row2->apellido ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="nombre" VALUE="<? echo $row2->nombre ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="fecha_nacimiento" VALUE="<? echo $row2->fecha_nacimiento ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="lugar_nacimiento" VALUE="<? echo $row2->lugar_nacimiento ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="hincha_de" VALUE="<? echo $row2->hincha_de ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="mail" VALUE="<? echo $row2->mail ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="ocupacion" VALUE="<? echo $row2->ocupacion ?>">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"><A HREF="fotos.html" TARGET="_blank"> 
+              <INPUT TYPE="Text" NAME="id_foto1" VALUE="<? echo $row2->id_foto1 ?>">
+              ></A></TD>
+            <TD BGCOLOR="#CCCCCC"><A HREF="fotos.html" TARGET="_blank"> 
+              <INPUT TYPE="Text" NAME="id_foto2" VALUE="<? echo $row2->id_foto2 ?>">
+              ></A> </TD>
+            <TD BGCOLOR="#CCCCCC"><A HREF="fotos.html" TARGET="_blank"> 
+              <INPUT TYPE="Text" NAME="id_foto3" VALUE="<? echo $row2->id_foto3 ?>">
+              ></A> </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?></FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+			}
+		}
+	mysql_free_result($result2);
+	}
+}else{
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Modificar</A></TD>
+          <TD BGCOLOR="#EEEEEE" ALIGN="CENTER"><? echo $row->id ?></TD>
+          <TD><? echo $row->apellido ?></TD>
+          <TD><? echo $row->nombre ?></TD>
+          <TD><? echo $row->fecha_nacimiento ?></TD>
+          <TD><? echo $row->lugar_nacimiento ?></TD>
+          <TD><? echo $row->hincha_de ?></TD>
+          <TD><A HREF="mailto:<? echo $row->mail ?>"><? echo $row->mail ?></A></TD>
+          <TD> <? echo $row->ocupacion ?></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto1'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto2'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto3'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <TD ALIGN="CENTER"><? echo $row->fecha_creacion ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+			}
+		}
+   }
+
+
+
+if ($accion==agregar){
+	if (!$enviar){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="AGREGAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="apellido" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="nombre" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="fecha_nacimiento" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="lugar_nacimiento" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="hincha_de" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="mail" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Text" NAME="ocupacion" VALUE="">
+            </TD>
+            <TD BGCOLOR="#CCCCCC"><A HREF="fotos.html" TARGET="_blank"> 
+              <INPUT TYPE="Text" NAME="id_foto1" VALUE="">
+              ></A></TD>
+            <TD BGCOLOR="#CCCCCC"><A HREF="fotos.html" TARGET="_blank"> 
+              <INPUT TYPE="Text" NAME="id_foto2" VALUE="">
+              ></A> </TD>
+            <TD BGCOLOR="#CCCCCC"><A HREF="fotos.html" TARGET="_blank"> 
+              <INPUT TYPE="Text" NAME="id_foto3" VALUE="">
+              ></A> </TD>
+            <TD ALIGN="CENTER" BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?></FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+		}
+	}
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+</BODY> 
+</HTML>

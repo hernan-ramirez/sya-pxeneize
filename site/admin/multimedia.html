@@ -1,0 +1,221 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<BODY>
+ 
+<P>PatronXeneize.com -> Multimedia</P>
+
+<?
+	if (!isset($paso)){ $paso=1; }
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que desea eliminar este registro?<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+  </DIV>
+<?
+}
+if ($borrar=="aceptar"){
+$result=mysql_query("SELECT nombre_arch FROM multimedia WHERE id = $id");
+	$row=mysql_fetch_array($result);
+	$pat="../multimedia/archivos/".$row[0];
+
+     unlink($pat);
+mysql_query("DELETE FROM multimedia WHERE id = $id");
+echo "El archivo fue borrado exitosamente";
+}
+	$result = mysql_query("SELECT * FROM multimedia");  
+	$total=mysql_num_rows($result);
+	$result2 = mysql_query("SELECT * FROM multimedia WHERE tipo_arch='audio'");  
+	$total_audios=mysql_num_rows($result2);
+	$result3 = mysql_query("SELECT * FROM multimedia WHERE tipo_arch='video'");  
+	$total_videos=mysql_num_rows($result3);
+	
+?> 
+
+<P><A HREF="<? echo $PHP_SELF ?>?accion=agregar&paso=<? echo $paso ?>">Agregar 
+  Nuevo Audio / Video</A></P>
+<P>Total Audios:<FONT COLOR="#104956"> <? echo $total_audios ?></FONT><BR>
+  Total Videos:<FONT COLOR="#104956"> <? echo $total_videos ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?> <?
+function form($texto, $tipo_arch, $size, $paso) {
+?> 
+<TABLE WIDTH="200" BORDER="0" CELLSPACING="3" CELLPADDING="3">
+  <TR ALIGN="CENTER"> 
+    <FORM action"<? echo $php_self ?>" ENCTYPE="multipart/form-data" METHOD="post">
+      <TD>El Archivo<BR>
+        <INPUT TYPE="file" NAME="file" SIZE="20">
+        <BR>
+        <BR>
+        <INPUT TYPE="hidden" NAME="size" VALUE="<? echo $size ?>">
+        <INPUT TYPE="hidden" NAME="accion" VALUE="agregar">
+        Ingresará como<BR>
+        <SELECT NAME="tipo_arch">
+          <OPTION VALUE="audio" <? if ($tipo_arch=='audio'){ echo 'selected'; } ?>>audio</OPTION>
+          <OPTION VALUE="video" <? if ($tipo_arch=='video'){ echo 'selected'; } ?>>video</OPTION>
+        </SELECT>
+        Texto:<BR>
+        <TEXTAREA NAME="texto"><? echo $texto ?></TEXTAREA>
+        <BR>
+        <INPUT TYPE="submit" VALUE="AGREGAR ARCHIVO" NAME="submit">
+      </TD>
+    </FORM>
+  </TR>
+</TABLE>
+<? 
+}
+?>
+
+
+<?
+if ($accion == "agregar" || $tipo_arch!="") { 
+  
+  if (isset($file)) {
+	$type = filetype($file);
+		echo $type;
+    if ($file_size == 0) {
+      echo "ADVERTENCIA: no ingresó ningun archivo.";
+      form($texto, $tipo_arch, $size, $paso);
+      } elseif(file_exists("../multimedia/archivos/$file_name")) {
+			echo "ADVERTENCIA: ya existe un archivo con el nombre $file_name";
+				form($texto, $tipo_arch, $size, $paso);
+			} else {
+    copy($file, "../multimedia/archivos/$file_name");
+
+	$fecha_creacion = date ("Y-m-d");
+	$nombre_arch=$file_name;
+	$tamano_arch=$file_size;
+
+		   $sql = "INSERT INTO multimedia (fecha_creacion, nombre_arch, tipo_arch, texto, tamano_arch) ". "VALUES ('$fecha_creacion', '$nombre_arch', '$tipo_arch', '$texto', '$tamano_arch')";
+
+   $result = mysql_query($sql);
+
+				$result2=mysql_query("SELECT id FROM multimedia WHERE nombre_arch='$nombre_arch'");
+				$row2=mysql_fetch_array($result2);
+	
+    echo "el archivo fue copiado en el servidor..."; 
+
+    	}
+	}else{
+	form($texto, $tipo_arch, $size, $paso);
+	} 
+ } 
+
+if ($enviar) {
+	$fecha_creacion = date ("Y-m-d"); 
+	if ($accion=="modificar"){
+			$sql="UPDATE multimedia SET tipo_arch='$tipo_arch', texto='$texto' WHERE id='$id'";
+   $result = mysql_query($sql);
+?>
+
+<DIV ID="Layer1" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:1; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER"> El registro  
+    ha sido correctamente ingresado/modificado en la base de datos.<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">ACEPTAR</A></P>
+  </DIV>
+
+<?		
+	}
+}
+?> 
+
+
+
+
+
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956" ALIGN="CENTER"> 
+          <TD><FONT COLOR="#FFFFFF"> Modificar</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Tipo Archivo </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Nombre de Archivo</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Texto</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Tamaño Arch.</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha Creacion </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Borrar </FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM multimedia LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+
+if ($accion=="modificar" && $row->id == $id){
+	if (!$enviar){
+		$result2 = mysql_query("SELECT * FROM multimedia WHERE id='$id'"); 
+		if ($result2 != 0){
+			while ($row2=mysql_fetch_object($result2)){
+?> 
+        <TR ALIGN="CENTER"> 
+          <FORM METHOD="POST" ACTION="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $id ?>&paso=<? echo $paso ?>">
+            <TD ALIGN="CENTER" BGCOLOR="#CCCCCC"> 
+              <INPUT TYPE="Submit" NAME="enviar" VALUE="MODIFICAR">
+            </TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"><? echo $id ?></FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <SELECT NAME="tipo_arch">
+                <OPTION VALUE="audio" <? if ($row->tipo_arch=='audio'){ echo 'selected'; } ?>>audio</OPTION>
+                <OPTION VALUE="video" <? if ($row->tipo_arch=='video'){ echo 'selected'; } ?>>video</OPTION>
+              </SELECT>
+            </TD>
+            <TD BGCOLOR="#104956"> <FONT COLOR="#FFFFFF"><? echo $row->nombre_arch ?> 
+              </FONT></TD>
+            <TD BGCOLOR="#CCCCCC"> 
+              <TEXTAREA NAME="texto"><? echo $row->texto ?></TEXTAREA>
+            </TD>
+            <TD BGCOLOR="#104956"> <FONT COLOR="#FFFFFF"><? echo $row->tamano_arch ?> 
+              </FONT></TD>
+            <TD BGCOLOR="#104956"> <FONT COLOR="#FFFFFF"><? echo $row->fecha_creacion ?> 
+              </FONT></TD>
+            <TD BGCOLOR="#104956"><FONT COLOR="#FFFFFF"></FONT></TD>
+          </FORM>
+        </TR>
+        <?
+			}
+		}
+	mysql_free_result($result2);
+	}
+}else{
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?accion=modificar&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Modificar</A></TD>
+          <TD><? echo $row->id ?></TD>
+          <TD><? echo $row->tipo_arch ?></TD>
+          <TD><? echo $row->nombre_arch ?></TD>
+          <TD><? echo $row->texto ?></TD>
+          <TD><? echo $row->tamano_arch ?></TD>
+          <TD><? echo $row->fecha_creacion ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+			}
+		}
+   }
+
+
+
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>

@@ -1,0 +1,43 @@
+<?
+include "../include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>Paguina a Imprimir</TITLE>
+<META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+</HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function printpag() {
+  if (window.print)
+    window.print()
+  else
+    alert("Su navegador no soporta esta funcion");
+}
+
+// -->
+</SCRIPT>
+<BODY onLoad="javascript:printpag()">
+<?
+	$sq="SELECT * FROM $tipo WHERE id=$id";
+	$not = mysql_query($sq);  
+   	$noticia = mysql_fetch_array($not);
+?> 
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD ALIGN="right"><B><FONT SIZE="2" FACE="MS Sans Serif" COLOR="#000000"><? echo $noticia[titulo] ?></FONT></B></TD>
+  </TR>
+  <TR> 
+    <TD><FONT FACE="MS Sans Serif" SIZE="1"><? echo $noticia[texto] ?> </FONT><BR></TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD><B><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></B></TD>
+  </TR>
+  <TR> 
+    <TD ALIGN="right"><B><FONT SIZE="2" FACE="MS Sans Serif" COLOR="#000000"><IMG SRC="../img/banners/el_sitio_oficial.gif" WIDTH="233" HEIGHT="33" VSPACE="2"></FONT></B></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>

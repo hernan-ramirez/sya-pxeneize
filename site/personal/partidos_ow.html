@@ -1,0 +1,70 @@
+<?
+include "../include/db_connect.inc";
+	$torneo1 = mysql_query("SELECT * FROM partidos_campeonato where id='$id'"); 
+$torneo = mysql_fetch_array($torneo1);
+?>
+<html>
+<head>
+<title>Estadísticas <? echo $torneo[campeonato] ?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+<STYLE type="text/css">
+<!--
+td {  font-family: "Ms Sans Serif"; font-size: 9pt}
+body {  font-family: "Ms Sans Serif"; font-size: 9pt; font-weight: bold}
+-->
+</STYLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" leftmargin="1" topmargin="1" marginwidth="1" marginheight="1">
+<DIV align="center"><B><FONT color="#FFFFFF">Todos los Partidos del <? echo $torneo[campeonato] ?></FONT></B><BR>
+  <BR>
+</DIV>
+<TABLE width="480" border="0" align="center" cellpadding="1" cellspacing="1">
+  <TR bgcolor="#999999"> 
+    <TD colspan="2">
+      <P><!-- Inicio Tabla Goles-->
+      <TABLE width="480" border="0" cellpadding="1" cellspacing="1">
+        <TR bgcolor="#000000"> 
+          <TD width="80"> 
+            <DIV align="center"><B>Fecha</B></DIV>
+          </TD>
+          <TD> 
+            <DIV align="center"><B>Equipo</B></DIV>
+          </TD>
+          <TD> 
+            <DIV align="center"><B>L/V</B></DIV>
+          </TD>
+          <TD> 
+            <DIV align="center"><B>Rival</B></DIV>
+          </TD>
+          <TD> 
+            <DIV align="center"><B>Res.</B></DIV>
+          </TD>
+          <TD> 
+            <DIV align="center"><B>Goles</B></DIV>
+          </TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM partidos where campeonato='$torneo[campeonato]' ORDER By fecha_partido"); 
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+?> 
+        <TR bgcolor="#666666"> 
+          <TD width="80"><? echo $row->fecha_partido ?></TD>
+          <TD><? echo $row->equipo ?></TD>
+          <TD align="center"><? echo $row->local ?></TD>
+          <TD><? echo $row->rival ?></TD>
+          <TD align="center"><? echo $row->resultado ?></TD>
+          <TD align="center"><? echo $row->goles ?></TD>
+        </TR>
+        <?
+	}
+}
+?> 
+      </TABLE>
+      <!-- Fin Tabla de Goles--> </TD>
+  </TR>
+</TABLE>
+</body>
+</html>

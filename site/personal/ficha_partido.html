@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<TITLE>Ficha del Partido</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../admin/include/admin_style.css">
+</HEAD>
+<BODY BGCOLOR="#FF7F00" LEFTMARGIN="2" TOPMARGIN="2" MARGINWIDTH="2" MARGINHEIGHT="2">
+<? 
+include "../include/db_connect.inc";
+
+$part=mysql_query("SELECT * FROM partidos WHERE id=$idpart");
+$partido=mysql_fetch_array($part);
+
+$camp=mysql_query("SELECT * FROM partidos_campeonato WHERE id=$partido[campeonato]");
+$campeonato=mysql_fetch_array($camp);
+
+$equi=mysql_query("SELECT * FROM partidos_equipos WHERE id=$partido[equipo]");
+$equipos=mysql_fetch_array($equi);
+
+$riv=mysql_query("SELECT * FROM partidos_equipos WHERE id=$partido[rival]");
+$rival=mysql_fetch_array($riv);
+
+$equipo[1]=$equipos[equipo];
+$equipo[2]=$rival[equipo];
+$id_equipo[1]=$equipos[id];
+$id_equipo[2]=$rival[id];
+
+$goles=strtok($partido[resultado], "-");
+$x=1;
+while ($goles){
+	$totalgoles[$x]=$goles;
+	$goles=strtok("-");
+	$x++;
+}
+
+$part=mysql_query("SELECT * FROM partidos WHERE id=$idpart");
+$partido=mysql_fetch_array($part);
+
+for ($y=1;$y<=2;++$y){
+$juga=strtok($partido[jugadores.$y], "-");
+$x=1;
+while ($juga){
+	$j[$y.$x]=$juga;
+	$juga=strtok("-");
+	$x++;
+}
+}
+
+for ($y=1;$y<=2;++$y){
+$gola=strtok($partido[goleadores.$y], "-");
+$x=1;
+while ($gola){
+	$g[$y.$x]=$gola;
+	$gola=strtok("-");
+	$x++;
+}
+}
+?> 
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000" ALIGN="center"> 
+    <TD><FONT COLOR="#FFFFFF">Ficha del Partido</FONT></TD>
+  </TR>
+  <TR> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+  </TR>
+  <TR BGCOLOR="#000000"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR> 
+    <TD> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR> 
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+          <TD HEIGHT="16" BGCOLOR="#FFFFFF" ALIGN="CENTER"> <BR>
+            <TABLE WIDTH="90%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR VALIGN="TOP" ALIGN="CENTER"> 
+                <TD> 
+                  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD WIDTH="13%" ALIGN="RIGHT" BGCOLOR="#323967"><FONT COLOR="#FFFFFF">Torneo:</FONT></TD>
+                      <TD WIDTH="87%" BGCOLOR="#FF9900"> <? echo $campeonato[campeonato] ?> 
+                      </TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD WIDTH="13%" ALIGN="RIGHT" BGCOLOR="#323967"><FONT COLOR="#FFFFFF">Fecha:</FONT></TD>
+                      <TD WIDTH="87%" BGCOLOR="#FF9900"> <? echo $partido[fecha_partido] ?> 
+                      </TD>
+                    </TR>
+                  </TABLE>
+                  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> <? for ($y=1;$y<=2;++$y){ ?> 
+                      <TD WIDTH="50%" VALIGN="TOP"> 
+                        <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                          <TR BGCOLOR="#323967"> 
+                            <TD WIDTH="100%" ALIGN="CENTER" COLSPAN="2"><FONT COLOR="#FFFFFF"> 
+                              <? echo $equipo[$y] ?></FONT></TD>
+                          </TR>
+                          <? for ($x=1;$x<=11;++$x){ ?> 
+                          <TR BGCOLOR="#FF9900"> 
+                            <TD WIDTH="90%" ALIGN="CENTER"> <?
+$vari=$j[$y.$x];
+$jug=mysql_query("SELECT * FROM jugadores WHERE id='$vari'");
+$juguete=mysql_fetch_array($jug);
+ echo $juguete[apellido]." ".$juguete[nombre];
+ ?> </TD>
+                          </TR>
+                          <? } ?> 
+                          <TR BGCOLOR="#454F8F"> 
+                            <TD WIDTH="100%" ALIGN="CENTER"><FONT COLOR="#FFFFFF">Goleadores</FONT></TD>
+                          </TR>
+                          <? for ($x=1;$x<=$totalgoles[$y];++$x){ ?> 
+                          <TR BGCOLOR="#FF9900"> 
+                            <TD WIDTH="90%" ALIGN="CENTER"> <?
+$vari=$g[$y.$x];
+$jug=mysql_query("SELECT * FROM jugadores WHERE id='$vari'");
+$juguete=mysql_fetch_array($jug);
+ echo $juguete[apellido]." ".$juguete[nombre];
+ ?> </TD>
+                            <? } ?> </TR>
+                        </TABLE>
+                        <BR>
+                      </TD>
+                      <? } ?> </TR>
+                  </TABLE>
+                  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD WIDTH="13%" ALIGN="RIGHT" BGCOLOR="#323967"><FONT COLOR="#FFFFFF">Estadio:</FONT></TD>
+                      <TD WIDTH="87%" BGCOLOR="#454F8F"> <FONT COLOR="#FFFFFF"><? echo $partido[estadio] ?> 
+                        </FONT></TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD WIDTH="13%" ALIGN="RIGHT" BGCOLOR="#323967"><FONT COLOR="#FFFFFF">Arbitro:</FONT></TD>
+                      <TD WIDTH="87%" BGCOLOR="#454F8F"> <FONT COLOR="#FFFFFF"><? echo $partido[arbitro] ?> 
+                        </FONT></TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD WIDTH="13%" ALIGN="RIGHT" BGCOLOR="#323967"><FONT COLOR="#FFFFFF">Lineas:</FONT></TD>
+                      <TD WIDTH="87%" BGCOLOR="#454F8F"> <FONT COLOR="#FFFFFF"><? echo $partido[lineas] ?> 
+                        </FONT></TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+              </TR>
+            </TABLE>
+            <BR>
+          </TD>
+          <TD BGCOLOR="#000000" WIDTH="1" HEIGHT="16"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>

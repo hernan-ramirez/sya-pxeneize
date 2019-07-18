@@ -1,0 +1,124 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<BODY>
+<?
+$nom = mysql_query("SELECT * FROM sorteos WHERE id=$id_sor");
+$nombre=mysql_fetch_array($nom);
+	if (!isset($paso)){ $paso=1; }
+?>
+
+<P>PatronXeneize.com -> SORTEO &quot;<? echo $nombre[titulo] ?>&quot;</P>
+
+<?
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:136px; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que decea eliminar este registro?<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?tabla=<? echo $tabla ?>&borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+  </DIV>
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM sorteos_inscriptos WHERE id = $id");
+}
+	$result = mysql_query("SELECT * FROM sorteos_inscriptos WHERE id_sorteo=$id_sor");  
+	$total=mysql_num_rows($result);
+	
+?> 
+
+<P>Total Inscriptos:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+<TABLE WIDTH="2000" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956"> 
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> ID</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> id Registrado</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Apellido </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Nombre </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Fecha Nac. </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Usuario </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Contraseña </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Hincha </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Mail </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Ocupaci&oacute;n </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Telefono </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Calle </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> Loc. </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF"> cp </FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Pais</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Sexo</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Lugar</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Hor</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">n.SYA</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">n.JS</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">n.terce.</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">compras</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">credito</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">encuesta</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Fecha Suscripcion</FONT></TD>
+          <TD ALIGN="CENTER"><FONT COLOR="#FFFFFF">Borrar</FONT></TD>
+        </TR>
+        <?
+	$result2 = mysql_query("SELECT * FROM sorteos_inscriptos WHERE id_sorteo=$id_sor LIMIT $rango_i,$rango");  
+		if ($result2 != 0){ 
+			while ($row2 = mysql_fetch_object($result2)){
+				$result = mysql_query("SELECT * FROM registrate WHERE id=$row2->id_registrado ");
+				$row=mysql_fetch_array($result);  
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD ALIGN="CENTER"><? echo $row2->id ?></TD>
+          <TD><? echo $row[id] ?></TD>
+          <TD><? echo $row[apellido] ?></TD>
+          <TD><? echo $row[nombre] ?></TD>
+          <TD><? echo $row[fecha_nacimiento] ?></TD>
+          <TD><? echo $row[usuario] ?></TD>
+          <TD><? echo $row[contrasena] ?></TD>
+          <TD><? echo $row[hincha_de] ?></TD>
+          <TD><A HREF="mailto:<? echo $row->email ?>"><? echo $row[email] ?></A></TD>
+          <TD> <? echo $row[ocupacion] ?></TD>
+          <TD><? echo $row[telefono] ?></TD>
+          <TD><? echo $row[domicilio_calle] ?></TD>
+          <TD><? echo $row[domicilio_localidad] ?></TD>
+          <TD><? echo $row[domicilio_cp] ?></TD>
+          <TD><? echo $row[domicilio_pais] ?></TD>
+          <TD><? echo $row[sexo] ?></TD>
+          <TD><? echo $row[lugar_conexion] ?></TD>
+          <TD><? echo $row[horario_conexion] ?></TD>
+          <TD><? echo $row[noticias_sya] ?></TD>
+          <TD><? echo $row[noticias_patronxeneize] ?></TD>
+          <TD><? echo $row[noticias_terceros] ?></TD>
+          <TD><? echo $row[compras] ?></TD>
+          <TD><? echo $row[credito] ?></TD>
+          <TD><? echo $row[encuesta] ?></TD>
+          <TD><? echo $row2->fecha_creacion ?></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?tabla=<? echo $tabla ?>&borrar=si&id=<? echo $row2->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+		}
+   }
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+</BODY> 
+</HTML>

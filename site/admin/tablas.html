@@ -1,0 +1,76 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+
+<BODY>
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" VSPACE="0" HSPACE="0">
+  <TR ALIGN="CENTER"> 
+    <TD><A HREF="idolos.html?nivel=<? echo $nivel ?>" TARGET="contenido">Idolos</A></TD>
+    <TD><A HREF="personaje.html?nivel=<? echo $nivel ?>" TARGET="contenido">Personaje</A></TD>
+    <TD><A HREF="trayectoria.html?nivel=<? echo $nivel ?>" TARGET="contenido">Trayectoria</A></TD>
+    <? if ($nivel!=3){ ?> 
+    <TD><A HREF="sorteos.html?nivel=<? echo $nivel ?>" TARGET="contenido">Sorteos</A></TD>
+    <TD><A HREF="downloads.html?nivel=<? echo $nivel ?>" TARGET="contenido">Downloads</A></TD>
+    <? } ?> 
+    <TD><A HREF="partidos.html?nivel=<? echo $nivel ?>" TARGET="contenido">Partidos</A></TD>
+    <TD><A HREF="multimedia.html?nivel=<? echo $nivel ?>" TARGET="contenido">Multimedia</A></TD>
+    <TD><A HREF="fotos.html?nivel=<? echo $nivel ?>" TARGET="contenido">Fotos</A></TD>
+    <TD><A HREF="entrevista.html?nivel=<? echo $nivel ?>" TARGET="contenido">Entrevista</A></TD>
+    <TD><A HREF="noticia.html?nivel=<? echo $nivel ?>" TARGET="contenido">Noticias</A></TD>
+    <TD><A HREF="consulta.html?nivel=<? echo $nivel ?>" TARGET="contenido">Consulta</A></TD>
+    <TD><A HREF="encuesta_preguntas.html?nivel=<? echo $nivel ?>" TARGET="contenido">Encuestas</A></TD>
+    <? if ($nivel==1){ ?> 
+    <TD><A HREF="registrate.html?nivel=<? echo $nivel ?>" TARGET="contenido">Registrate</A></TD>
+    <TD><A HREF="admin.html?nivel=<? echo $nivel ?>" TARGET="contenido">Admin</A></TD>
+    <? } ?> </TR>
+  <? if ($nivel==1){ ?> 
+  <TR ALIGN="CENTER"> <?	$result = mysql_query("SELECT * FROM idolos");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM personaje");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM trayectoria");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM sorteos");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM downloads");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM partidos");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM multimedia");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM fotos");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM entrevista");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM noticia");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM consulta");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM encuesta_preguntas");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM registrate");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+    <?	$result = mysql_query("SELECT * FROM admin");  
+	$total=mysql_num_rows($result); ?> 
+    <TD><FONT COLOR="#104956"><? echo $total ?></FONT></TD>
+  </TR>
+  <? } ?> 
+</TABLE>
+<HR noshade SIZE="1">
+</BODY>
+</HTML>

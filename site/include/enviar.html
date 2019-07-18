@@ -1,0 +1,229 @@
+<?
+include "../include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>Enviar a un Amigo</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="estilos.css">
+<STYLE TYPE="TEXT/CSS">
+<!--
+td {  color: #FFFFFF}
+-->
+</STYLE>
+</HEAD>
+<BODY MARGINWIDTH="2" LEFTMARGIN="2" TOPMARGIN="2" MARGINHEIGHT="2" BGCOLOR="#FF7F00">
+<?
+function formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario, $id, $tipo, $formato) {
+?>
+<TABLE WIDTH="398" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR bgcolor="#000000"> 
+    <TD align="center" height="15">Enviar a un Amigo</TD>
+  </TR>
+  <TR> 
+    <TD><IMG src="../img/general/spacer.gif" width="1" height="3"></TD>
+  </TR>
+  <TR bgcolor="#FFFFFF"> 
+    <FORM METHOD="post" ACTION="<? echo $PHP_SELF ?>?id=<? echo $id ?>&tipo=<? echo $tipo ?>">
+      <TD align="center">
+        <TABLE width="402" border="0" cellspacing="0" cellpadding="0">
+          <TR> 
+            <TD bgcolor="#000000" width="1"><IMG src="../img/general/spacer.gif" width="1" height="1"></TD>
+            <TD width="400"> 
+              <TABLE width="100%" border="0" cellspacing="0" cellpadding="0">
+                <TR bgcolor="#000000"> 
+                  <TD><IMG src="../img/general/spacer.gif" width="1" height="1"></TD>
+                </TR>
+                <TR align="center"> 
+                  <TD><FONT color="#000000"><BR>
+                    Por favor no deje campos sin completar</FONT><BR>
+                    <BR>
+                    <TABLE border="0" cellspacing="2" cellpadding="2">
+                      <TR> 
+                        <TD align="RIGHT"><FONT color="#000000"> Tu Nombre</FONT></TD>
+                        <TD align="LEFT"> 
+                          <INPUT type="text" name="nombre" value="<? echo $nombre ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD align="RIGHT"><FONT color="#000000"> Tu Mail</FONT></TD>
+                        <TD align="LEFT"> 
+                          <INPUT type="text" name="mail" value="<? echo $mail ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD align="RIGHT"><FONT color="#000000"> Nombre del Destinatario</FONT></TD>
+                        <TD align="LEFT"> 
+                          <INPUT type="text" name="destinatario" value="<? echo $destinatario ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD align="RIGHT"><FONT color="#000000"> Mail del destinatario</FONT></TD>
+                        <TD align="LEFT"> 
+                          <INPUT type="text" name="maildestinatario" value="<? echo $maildestinatario ?>">
+                        </TD>
+                      </TR>
+                      <TR> 
+                        <TD align="RIGHT"><FONT color="#000000">Formato </FONT></TD>
+                        <TD align="LEFT"> 
+                          <INPUT type="radio" name="formato" value="0" CHECKED>
+                          <FONT color="#000000"> HTML <BR>
+                          <INPUT type="radio" name="formato" value="1">
+                          TEXTO </FONT></TD>
+                      </TR>
+                    </TABLE>
+                    <BR>
+                    <INPUT type="submit" name="Submit" value="Enviar">
+                    <INPUT type="reset" name="Submit" value="Borrar">
+                  </TD>
+                </TR>
+              </TABLE>
+            </TD>
+            <TD bgcolor="#000000" width="1"><IMG src="../img/general/spacer.gif" width="1" height="1"></TD>
+          </TR>
+        </TABLE>
+        
+      </TD>
+    </FORM>
+  </TR>
+</TABLE>
+<TABLE width="402" border="0" cellspacing="0" cellpadding="0">
+  <TR> 
+    <TD background="../img/general/fondo_ow.gif" width="100%"><IMG src="../img/general/form_left.gif" width="15" height="15"></TD>
+    <TD bgcolor="#000000" width="1"><IMG src="../img/general/spacer.gif" width="1" height="1"></TD>
+  </TR>
+</TABLE>
+<?
+	}
+
+function html2text($strx){
+	$tempstrx = $strx;
+	$tempstrx = str_replace("&aacute;","á",$tempstrx);
+	$tempstrx = str_replace("&eacute;","é",$tempstrx);
+	$tempstrx = str_replace("&iacute;","í",$tempstrx);	
+	$tempstrx = str_replace("&oacute;","ó",$tempstrx);
+	$tempstrx = str_replace("&uacute;","ú",$tempstrx);
+	$tempstrx = str_replace("&Aacute;","Á",$tempstrx);	
+	$tempstrx = str_replace("&Eacute;","É",$tempstrx);
+	$tempstrx = str_replace("&Iacute;","Í",$tempstrx);
+	$tempstrx = str_replace("&Oacute;","Ó",$tempstrx);	
+	$tempstrx = str_replace("&Uacute;","Ú",$tempstrx);
+	$tempstrx = str_replace('&quot;','"',$tempstrx);	
+	$tempstrx = str_replace("&#39;","'",$tempstrx);
+	$tempstrx = str_replace("<p>","",$tempstrx);
+	$tempstrx = str_replace("</p>","",$tempstrx);
+	$tempstrx = str_replace("<P>","",$tempstrx);
+	$tempstrx = str_replace("</P>","",$tempstrx);
+	$tempstrx = str_replace("<b>","",$tempstrx);
+	$tempstrx = str_replace("</b>","",$tempstrx);
+	$tempstrx = str_replace("<B>","",$tempstrx);
+	$tempstrx = str_replace("</B>","",$tempstrx);
+	$tempstrx = str_replace("<i>","",$tempstrx);
+	$tempstrx = str_replace("</i>","",$tempstrx);
+	$tempstrx = str_replace("<I>","",$tempstrx);
+	$tempstrx = str_replace("</I>","",$tempstrx);
+	$tempstrx = str_replace("<u>","",$tempstrx);
+	$tempstrx = str_replace("</u>","",$tempstrx);
+	$tempstrx = str_replace("<U>","",$tempstrx);
+	$tempstrx = str_replace("</U>","",$tempstrx);
+	$tempstrx = str_replace("<br>","\n",$tempstrx);
+	$tempstrx = str_replace("<BR>","\n",$tempstrx);
+	return $tempstrx;	
+
+}
+
+	function send_email( $se_from, $se_from_nome, $se_to, $se_to_nome, $se_cc, $se_mode, $se_html )
+	{
+	
+		if( $se_cc !='' )
+		{
+			$se_cc = str_replace( " ", ",", $se_cc );
+		}
+		
+		$se_subject = $se_to_nome.'... mirete esto de PatronXeneize.com';
+		$se_message = "Si esta noticia no aparece bien en su e-mail, diga a quien se lo ha enviado que lo haga en formato TEXTO.";
+		
+	  	$mailheaders .= ""; 	
+	  	if( $se_from !='' ) { $mailheaders .= "From: $se_from_nome <" . $se_from . ">\r\n"; }
+	  	if( $se_cc !='' ) { $mailheaders .= "Cc: " . $se_cc . "\r\n"; }
+	
+		
+		if( $se_mode==0 )
+		{
+	   		$boundary = "--------" . uniqid( "part" );
+	
+	   		$mailheaders .= "MIME-Version: 1.0\r\n";
+	   		$mailheaders .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
+	
+	   		$bodytext  = "This is a multi-part message in MIME format.\r\n\r\n";
+	
+	   		$bodytext .= "--$boundary\r\n";
+	   		$bodytext .= "Content-Type: text/html; charset=iso-8859-1\r\n";
+	   		$bodytext .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+	   		$bodytext .= $se_html . "\r\n";
+	
+	   		$bodytext .= "--$boundary\r\n";
+	   		$bodytext .= "Content-Type: text/plain; charset=iso-8859-1\r\n";
+	   		$bodytext .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+	   		$bodytext .= $se_message . "\r\n";
+	
+	   		$bodytext .= "--$boundary\r\n";
+	   		
+	  	} else {
+	
+	   		$bodytext = $se_html;
+	  	}
+	
+		//echo "$se_from <br> $se_from_nome <br> $se_to <br> $se_to_nome <br> " ;
+	//exit;
+
+		if( $se_to_nome !='' )
+		{
+			$se_to = "\"$se_to_nome\" <" .$se_to . ">";
+		}
+
+		//echo "$se_from <br> $se_from_nome <br> $se_to <br> $se_to_nome <br> " ;
+	//exit;
+
+		return mail( $se_to, $se_subject, $bodytext, $mailheaders );
+		
+	
+	}
+
+?>
+<TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <FORM NAME="form1" METHOD="post" ACTION="">
+  <TR ALIGN="center">
+      <TD> <?
+if (!isset($nombre) && !isset($mail) && !isset($maildestinatario) && !isset($destinatario)) {  
+formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario, $id, $tipo, $formato);
+} else {
+if (empty($nombre) || empty ($mail) || empty ($maildestinatario) || empty ($destinatario)) { 
+?> <B>Olvid&oacute; completar un campo...</B> <?
+formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario, $id, $tipo, $formato);
+} else {
+if (ereg("@", "$mail") && ereg("\.", "$mail") && ereg("@", "$maildestinatario") && ereg("\.", "$maildestinatario")) {
+ 
+include "doc_mail.html";
+
+send_email( $mail, $nombre, $maildestinatario, $destinatario, "", $formato , $dochtml);
+
+?> <FONT COLOR="#FF9900"><B><FONT color="#330066">Gracias por usar este servicio.</FONT></B></FONT><BR>
+<BR>
+      El mail fue enviado correctamente a la direcci&oacute;n 
+        <? echo $maildestinatario ?><BR><BR>
+        <INPUT TYPE="submit" NAME="Submit2" VALUE="Cerrar" onClick="javascript:window.close()">
+<?
+} else {  
+?> La direcci&oacute;n de mail no es v&aacute;lida... <?
+formulario($PHP_SELF, $nombre, $mail, $maildestinatario, $destinatario, $id, $tipo, $formato);
+    }
+  }
+} 
+?> </TD>
+</TR>
+      </FORM>
+</TABLE>
+</BODY>
+</HTML>
+

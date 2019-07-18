@@ -1,0 +1,220 @@
+<?
+include "include/db_connect.inc";
+?>
+<HTML>
+<LINK REL="stylesheet" HREF="include/admin_style.css"><META NAME="autor" CONTENT="Esteban Raffo Quintana, Hernan Pablo Principe, Hernan Javier Ramirez">
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function sub(){
+document.person.submit();
+}
+
+function showImage (url, name, w, h) {	
+	var n3 = (navigator.appName.indexOf('Netscape')!=-1 && navigator.appVersion.indexOf('3.')!=-1)?true:false;
+	var ww = (n3)?(parseInt(w)+20):parseInt(w);
+	var wh = (n3)?(parseInt(h)+20):parseInt(h);
+	var winname = (name.indexOf(' ')!=-1)?name.substring(0, name.indexOf(' ')):name;
+	var wnd = window.open('', winname, 'width='+ww+',height='+(wh+0));
+	var code =  "<html><head>\n" +
+				"<title>" + name + "</title></head>\n" +
+				"<body bgcolor=#000000 text=#CCCCCC marginwidth=0 marginheight=0 leftmargin=0 topmargin=0>\n" +
+				"<center><img src=\"" + url + "\"><br>\n" +
+				"</center></body></html>"
+	wnd.document.write(code);
+	wnd.document.close();
+}
+//-->
+</SCRIPT>
+<BODY>
+
+
+<?
+	if (!isset($paso)){ $paso=1; }
+if ($borrar=="si"){
+?>
+<DIV ID="Layer2" STYLE="position:absolute; left:35%; top:30%; width:223px; height:145px; z-index:2; background-color: #CCCCCC; layer-background-color: #CCCCCC; border: medium double black"> 
+  <P>&nbsp;</P>
+  <P ALIGN="CENTER">¿Esta seguro que decea eliminar este registro?<BR><BR>
+    <A HREF="<? echo $PHP_SELF ?>?borrar=aceptar&id=<? echo $id ?>&paso=<? echo $paso ?>">ACEPTAR</A>&nbsp
+<A HREF="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>">CANCELAR</A></P>
+  </DIV>
+
+<?
+}
+if ($borrar=="aceptar"){
+mysql_query("DELETE FROM entrevista WHERE id = $id");
+}
+
+if ($enviar) {
+if ($id_personaje==0){
+	echo "Elija un Personaje";
+	}else{
+
+	$result3=mysql_query("SELECT id_personaje FROM entrevista WHERE id_personaje='$id_personaje'");
+
+	if (mysql_num_rows($result3) == 0 ){
+
+	$fecha_creacion = date ("Y-m-d");
+   $sql = "INSERT INTO entrevista (fecha_creacion, id_personaje, titulo, texto, id_foto1, id_foto2, id_foto3) ". "VALUES ('$fecha_creacion','$id_personaje', '$titulo', '$texto', '$id_foto1', '$id_foto2', '$id_foto3')"; 
+
+	}else{
+			$sql="UPDATE entrevista SET titulo='$titulo', texto='$texto', id_foto1='$id_foto1', id_foto2='$id_foto2', id_foto3='$id_foto3' WHERE id_personaje='$id_personaje'";
+
+	}
+
+   $result = mysql_query($sql);
+echo "El registro $titulo ha sido correctamente ingresado en la base de datos."; 
+
+	}	
+}else{
+?>
+<P>PatronXeneize.com -> Entrevista</P>
+<?		
+	$result = mysql_query("SELECT * FROM entrevista");  
+	$total=mysql_num_rows($result);
+	
+?> 
+
+<P>Total Entrevistas:<FONT COLOR="#104956"> <? echo $total ?></FONT><BR>
+  P&aacute;ginas: <?
+
+	$rango=25;
+	$rango_i=($rango*$paso)-$rango;
+ 	$pasos=$total/$rango;
+	$x=1;
+	while ($x<=($pasos+1)){
+?> <A HREF="<? echo $PHP_SELF ?>?paso=<? echo $x ?>" <? if ($x==$paso){ echo "style='color:#104956'"; } ?>><? echo $x ?>&nbsp;</A> 
+  <?
+		$x++;
+	}
+?></P>
+<FORM METHOD="post" ACTION="<? echo $PHP_SELF ?>?paso=<? echo $paso ?>" NAME="person">
+  <P><BR>
+    Agregar Nuevo Entrevistado:</P>
+  <TABLE WIDTH="350" BORDER="0">
+    <TR> 
+      <TD>Personaje:</TD>
+      <TD> 
+        <SELECT NAME="id_personaje" onChange="javascript:sub()" >
+          <OPTION VALUE="...">...</OPTION>
+          <?
+$result = mysql_query("SELECT * FROM personaje");
+if ($result !=0) {
+	while ($row=mysql_fetch_object($result)){
+?> 
+          <OPTION VALUE="<? echo $row->id ?>" <? if ($id_personaje==$row->id){ echo "selected"; } ?> ><? echo $row->nombre ?> 
+          <? echo $row->apellido ?></OPTION>
+          <?
+	}
+}
+?> 
+        </SELECT>
+        <A HREF="personaje.html?accion=agregar&paso=<? echo $paso ?>">Agregar</A> </TD>
+    </TR>
+    <?
+$result2 = mysql_query("SELECT id,id_personaje,titulo,texto,id_foto1,id_foto2,id_foto3 FROM entrevista WHERE id_personaje='$id_personaje'");
+	$row2=mysql_fetch_array($result2);
+?> 
+    <TR> 
+      <TD>Título: </TD>
+      <TD> 
+        <INPUT TYPE="Text" NAME="titulo" VALUE="<? echo $row2[2] ?>">
+      </TD>
+    </TR>
+    <TD>Texto: </TD>
+    <TD> 
+      <TEXTAREA TYPE="Texto" ROWS="5" NAME="texto"><? echo $row2[3] ?></TEXTAREA>
+    </TD>
+    </TR>
+    <TR> 
+      <TD>Foto 1: </TD>
+      <TD><A HREF="fotos.html" TARGET="_blank"> 
+        <INPUT TYPE="Text" NAME="id_foto1" VALUE="<? echo $row2[4] ?>">></A>
+      </TD>
+    </TR>
+    <TR> 
+      <TD>Foto 2: </TD>
+      <TD><A HREF="fotos.html" TARGET="_blank"> 
+        <INPUT TYPE="Text" NAME="id_foto2" VALUE="<? echo $row2[5] ?>">></A>
+      </TD>
+    </TR>
+    <TR> 
+      <TD>Foto 3: </TD>
+      <TD><A HREF="fotos.html" TARGET="_blank">
+        <INPUT TYPE="Text" NAME="id_foto3" VALUE="<? echo $row2[6] ?>">></A>
+      </TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+      <TD> 
+        <INPUT TYPE="Submit" NAME="enviar" VALUE="Aceptar información">
+      </TD>
+    </TR>
+  </TABLE>
+</FORM>
+<?
+}
+?>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000"> 
+    <TD>
+      <TABLE BORDER="0" BORDERCOLOR="#000000" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <TR BGCOLOR="#104956" ALIGN="CENTER"> 
+          <TD><FONT COLOR="#FFFFFF"> id </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Apellido </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Nombre </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Titulo </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Texto </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Fecha Creacion</FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto1 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto2 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Foto3 </FONT></TD>
+          <TD><FONT COLOR="#FFFFFF"> Borrar </FONT></TD>
+        </TR>
+        <?
+	$result = mysql_query("SELECT * FROM entrevista LIMIT $rango_i,$rango");  
+		if ($result != 0){ 
+			while ($row = mysql_fetch_object($result)){
+
+?> 
+        <TR BGCOLOR="#EEEEEE"> 
+          <TD><? echo $row->id ?></TD>
+          <?
+	$result4 = mysql_query("SELECT * FROM personaje WHERE id='$row->id_personaje'");  
+		if ($result4 != 0){ 
+			while ($row4 = mysql_fetch_object($result4)){
+
+?> 
+          <TD><? echo $row4->apellido ?></TD>
+          <TD><? echo $row4->nombre ?></TD>
+          <?
+	}
+}
+?> 
+          <TD><? echo $row->titulo ?></TD>
+          <TD><? echo $row->texto ?></TD>
+          <TD><? echo $row->fecha_creacion ?></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto1'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto2'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <? $imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$row->id_foto3'");
+	$imasa=mysql_fetch_array($imas); ?> 
+          <TD><A HREF="javascript:showImage('../img/clipart/<? echo $imasa[0] ?>', 'imagen', '<? echo $imasa[1] ?>', '<? echo $imasa[2] ?>')"><? echo $imasa[0] ?></A></TD>
+          <TD ALIGN="CENTER"><A HREF="<? echo $PHP_SELF ?>?borrar=si&id=<? echo $row->id ?>&paso=<? echo $paso ?>">Borrar</A></TD>
+        </TR>
+        <?
+			}
+		}
+
+?> 
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>
+
+

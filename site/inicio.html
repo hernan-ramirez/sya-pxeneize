@@ -1,0 +1,394 @@
+<?
+include "include/db_connect.inc"
+?>
+<HTML>
+<HEAD>
+<TITLE>Jorge Bermudez</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="include/estilos.css">
+</HEAD>
+<? include "include/openwindow.inc"; ?>
+<BODY BGCOLOR="#575757" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#485977"> 
+    <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="5"></TD>
+  </TR>
+  <TR>
+    <TD BGCOLOR="#323967"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="4"></TD>
+  </TR>
+  <TR BGCOLOR="#485977"> 
+    <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR> 
+    <TD BGCOLOR="#323967">
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR>
+          <TD WIDTH="480" VALIGN="TOP"> 
+            <TABLE WIDTH="480" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR> 
+                <TD ALIGN="RIGHT"><IMG SRC="img/general/patronxeneizecom.gif" WIDTH="178" HEIGHT="23" VSPACE="6" HSPACE="6"></TD>
+              </TR>
+              <TR BGCOLOR="#FFFFFF"> 
+                <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+              </TR>
+              <TR BGCOLOR="#000000"> 
+                <TD HEIGHT="15"><IMG SRC="img/general/menu.gif" WIDTH="467" HEIGHT="15" USEMAP="#Menu_Top" BORDER="0"><MAP NAME="Menu_Top"><AREA SHAPE="RECT" COORDS="97,3,202,13" HREF="periodistica/?inc=ficha_personal"><AREA SHAPE="RECT" COORDS="225,3,323,13" HREF="periodistica/?inc=se_dice"><AREA SHAPE="RECT" COORDS="350,3,434,13" HREF="periodistica/?inc=trayectoria"></MAP></TD>
+              </TR>
+              <TR BGCOLOR="#000000">
+                <TD HEIGHT="15"><IMG SRC="img/general/bermudez.jpg" WIDTH="450" HEIGHT="291"></TD>
+              </TR>
+            </TABLE>
+          </TD>
+          <TD VALIGN="TOP" HEIGHT="73" BGCOLOR="#000000"> 
+            <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR> 
+                <TD WIDTH="27" VALIGN="BOTTOM" BGCOLOR="#323967" HEIGHT="63"><IMG SRC="img/general/chanfle_grande.gif" WIDTH="27" HEIGHT="27"></TD>
+                <TD WIDTH="100%" VALIGN="BOTTOM" BGCOLOR="#323967"  HEIGHT="63"> 
+                  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> 
+                      <TD><IMG SRC="img/general/menu_derecho.gif" WIDTH="182" HEIGHT="45" VSPACE="5" HSPACE="5" USEMAP="#Map2" BORDER="0"><MAP NAME="Map2"><AREA SHAPE="RECT" COORDS="9,-1,183,10" HREF="javascript:openwin('comunidad/recomienda.html','recomienda','width=406,height=290,scrollbars=0')"><AREA SHAPE="RECT" COORDS="10,18,101,28" HREF="#"><AREA SHAPE="RECT" COORDS="10,34,124,44" HREF="periodistica/?inc=../include/buscar"></MAP></TD>
+                    </TR>
+                    <TR BGCOLOR="#FFFFFF"> 
+                      <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+              </TR>
+              <TR>
+                <TD WIDTH="27" VALIGN="BOTTOM">&nbsp;</TD>
+                <TD WIDTH="100%" VALIGN="BOTTOM"><?
+$notip = mysql_query("SELECT * FROM noticia where tipo_contenido='Noticia' and nivel='Principal'");
+$noticiap=mysql_fetch_array($notip);
+$notis = mysql_query("SELECT * FROM noticia where tipo_contenido='Noticia' and nivel='Secundaria'");
+$noticias=mysql_fetch_array($notis);
+$notig = mysql_query("SELECT * FROM noticia where tipo_contenido='Noticia' and nivel='General' Limit 3");
+
+$imas=mysql_query("SELECT nombre_arch, ancho, alto FROM fotos WHERE id='$noticiap[id_foto1]'");
+$imasa=mysql_fetch_array($imas);
+?><BR>
+                  <TABLE WIDTH="235" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> 
+                      <TD><A HREF="personal/index.html"><IMG SRC="img/general/cbj.gif" WIDTH="235" HEIGHT="27" BORDER="0"></A></TD>
+                    </TR>
+                  </TABLE>
+                  <TABLE WIDTH="235" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> 
+                      <TD BGCOLOR="#FFFFFF" WIDTH="1"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                      <TD WIDTH="233"> 
+                        <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                          <TR BGCOLOR="#FF7F00"> 
+                            <TD>
+                              <TABLE WIDTH="233" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="54"><A HREF="periodistica/index.html?inc=mas&tipo=noticia"><IMG SRC="img/general/noticias.gif" WIDTH="54" HEIGHT="15" BORDER="0"></A></TD>
+                                  <TD WIDTH="179"><APPLET CODEBASE="./applets/inicio2/" CODE="aTicker.class" ARCHIVE="aTicker.jar" WIDTH=179 HEIGHT=15 MAYSCRIPT>
+                                      <PARAM NAME="_file" VALUE="./mess.txt">
+                                      <PARAM NAME="file" VALUE="s">
+                                      <PARAM NAME="cSep" VALUE=";">
+                                      <PARAM NAME="speed" VALUE="2">
+                                      <PARAM NAME="delay" VALUE="30">
+                                      <PARAM NAME="local" VALUE="true">
+                                      <PARAM NAME="bgcolor" VALUE="16744192">
+                                      <PARAM NAME="Font1" VALUE="Verdana, 10, 0, 16777215">
+                                      <PARAM NAME="Font2" VALUE="Verdana, 10, 2, 16777215">
+<?
+$result = mysql_query("SELECT * FROM noticia where tipo_contenido='Noticia' and nivel='Principal'");
+	if ($result !=0){
+		$x=0;
+		while($row = mysql_fetch_object($result)){
+?>
+                                      <PARAM NAME="s<? echo $x ?>" VALUE="<? echo $row->titulo ?> ; ../../periodistica/index.html?id=<? echo $row->id ?>&inc=nota&tipo=noticia ; _self">
+<?
+			$x++;
+		}
+	}
+?>
+<?
+$result = mysql_query("SELECT * FROM noticia where tipo_contenido='Noticia' and nivel='Secundaria'");
+	if ($result !=0){
+		while($row = mysql_fetch_object($result)){
+?>
+                                      <PARAM NAME="s<? echo $x ?>" VALUE="<? echo $row->titulo ?> ; ../../periodistica/index.html?id=<? echo $row->id ?>&inc=nota&tipo=noticia ; _self">
+<?
+			$x++;
+		}
+	}
+?>
+<?
+$result = mysql_query("SELECT * FROM noticia where tipo_contenido='Noticia' and nivel='General' Limit 3");
+	if ($result !=0){
+		while($row = mysql_fetch_object($result)){
+?>
+                                      <PARAM NAME="s<? echo $x ?>" VALUE="<? echo $row->titulo ?> ; ../../periodistica/index.html?id=<? echo $row->id ?>&inc=nota&tipo=noticia ; _self">
+<?
+			$x++;
+		}
+	}
+?>
+
+                                    </APPLET></TD>
+                                </TR>
+                              </TABLE>
+                            </TD>
+                          </TR>
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                          <TR> 
+                            <TD><IMG SRC="img/banners/mastercard.gif" WIDTH="233" HEIGHT="33"></TD>
+                          </TR>
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                          <TR> 
+                            <TD> 
+                              <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                                <TR> 
+                                  <TD WIDTH="54"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=4,0,2,0" WIDTH="54" HEIGHT="78">
+                                      <PARAM NAME=movie VALUE="flash/pelicula_inicio.swf">
+                                      <PARAM NAME=quality VALUE=high>
+                                      <EMBED SRC="flash/pelicula_inicio.swf" QUALITY=high PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" TYPE="application/x-shockwave-flash" WIDTH="54" HEIGHT="78">
+                                      </EMBED> 
+                                    </OBJECT></TD>
+                                  <TD WIDTH="1" BGCOLOR="#FFFFFF"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                                  <TD WIDTH="180"> 
+                                    <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="78">
+                                      <TR BGCOLOR="#323967"> 
+                                        <TD HEIGHT="17">&Uacute;ltimos Partidos 
+                                          de Boca vs:</TD>
+                                      </TR>
+                                      <TR BGCOLOR="#FFFFFF"> 
+                                        <TD HEIGHT="1"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                                      </TR>
+                                      <TR BGCOLOR="#323967" VALIGN="TOP" ALIGN="center"> 
+                                        <TD HEIGHT="62"> <?
+$result = mysql_query("SELECT * FROM partidos WHERE resultado!='' ORDER BY fecha_partido DESC LIMIT 4");
+	if ($result !=0){
+		while($row = mysql_fetch_object($result)){
+?> 
+                                          <TABLE WIDTH="174" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                                            <TR> 
+                                              <TD COLSPAN="4"> 
+                                                <TABLE WIDTH="175" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                                                  <TR>
+                                                    <TD WIDTH="15" bgcolor="#FF7F00"> 
+                                                      &nbsp;-&gt;</TD>
+<?
+$equi = mysql_query("SELECT * FROM partidos_equipos WHERE id='$row->rival'");
+$equipo = mysql_fetch_array($equi);
+?>
+                                                    <TD WIDTH="135" bgcolor="#FF7F00"><A HREF="javascript:openwin('personal/ficha_partido.html?idpart=<? echo $row->id ?>','ficha','width=417,height=410,scrollbars=1')"><FONT COLOR="#FFFFFF"><? echo $equipo[equipo] ?></FONT></A></TD>
+                                                    <TD WIDTH="25" bgcolor="#FF7F00"><? echo $row->resultado ?></TD>
+                                                  </TR>
+                                                </TABLE>
+                                              </TD>
+                                            </TR>
+                                            <TR BGCOLOR="#FFFFFF"> 
+                                              <TD COLSPAN="4"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                                            </TR>
+                                          </TABLE>
+                                          <?
+		}
+	}
+?></TD>
+                                      </TR>
+                                    </TABLE>
+                                  </TD>
+                                </TR>
+                              </TABLE>
+                            </TD>
+                          </TR>
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                          <TR> 
+                            <TD> 
+                              <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                                <TR> 
+                                  <TD WIDTH="159"> 
+                                    <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="78">
+                                      <TR BGCOLOR="#000000" ALIGN="CENTER"> 
+                                        <TD HEIGHT="15">El Invitado</TD>
+                                      </TR>
+                                      <TR BGCOLOR="#FFFFFF"> 
+                                        <TD HEIGHT="1"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                                      </TR>
+                                      <TR BGCOLOR="#575757" VALIGN="TOP"> 
+                                        <TD HEIGHT="62">&nbsp; </TD>
+                                      </TR>
+                                    </TABLE>
+                                  </TD>
+                                  <TD WIDTH="1" BGCOLOR="#FFFFFF"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                                  <TD WIDTH="75"><IMG SRC="img/general/spacer.gif" WIDTH="75" HEIGHT="75"></TD>
+                                </TR>
+                              </TABLE>
+                            </TD>
+                          </TR>
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                        </TABLE>
+                      </TD>
+                      <TD BGCOLOR="#FFFFFF" WIDTH="1"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                    </TR>
+                  </TABLE>
+                  <TABLE WIDTH="235" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR BGCOLOR="#323967"> 
+                      <TD><IMG SRC="img/general/concursos.gif" WIDTH="235" HEIGHT="17" USEMAP="#MapMap" BORDER="0"><MAP NAME="MapMap"><AREA SHAPE="rect" COORDS="103,4,223,13" HREF="javascript:openwin('comunidad/registrate.html','registrate','width=422,height=350,scrollbars=1')"><AREA SHAPE="rect" COORDS="15,3,92,13" HREF="javascript:openwin('comunidad/sorteos.html','sorteos','width=422,height=200,scrollbars=1')"></MAP></TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+              </TR>
+            </TABLE>
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+  <TR BGCOLOR="#323967"> 
+    <TD> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR>
+          <TD WIDTH="328" VALIGN="TOP"> 
+            <TABLE WIDTH="328" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR> 
+                <TD><IMG SRC="img/general/bermudez_bajo.jpg" WIDTH="328" HEIGHT="18"></TD>
+              </TR>
+              <TR> 
+                <TD>
+                  <TABLE WIDTH="328" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> 
+                      <TD BGCOLOR="#FF7F00" WIDTH="310"> &nbsp;&nbsp;<?
+$col = mysql_query("SELECT * FROM noticia WHERE tipo_contenido ='Columna' and nivel='Principal'");
+$columna=mysql_fetch_array($col);
+echo $columna[titulo];	
+?> </TD>
+                      <TD BGCOLOR="#FFFFFF" WIDTH="1"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                      <TD WIDTH="17">&nbsp;</TD>
+                    </TR>
+                  </TABLE>
+                  <TABLE WIDTH="328" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR>
+                      <TD WIDTH="256" VALIGN="TOP"> 
+                        <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                          <TR BGCOLOR="#FF7F00" VALIGN="TOP"> 
+                            <TD HEIGHT="64"> 
+                              <TABLE WIDTH="100%" BORDER="0" CELLSPACING="2" CELLPADDING="2">
+                                <TR ALIGN="RIGHT"> 
+                                  <TD><? 
+ 		$num = 0;
+		$words = explode ( " ", $columna[texto]); 
+		while ( list(, $word) = each ($words) ) {
+		  $num = strlen($word) + $num ;
+		  if ($num < 130) {
+		    echo "$word ";
+		  } else {
+		    break;
+		  } 
+		} 
+?><FONT COLOR="#333366">...<A HREF="periodistica/index.html?inc=nota&id=<? echo $columna[id] ?>&tipo=columna">ver 
+                                    m&aacute;s</A></FONT></TD>
+                                </TR>
+                              </TABLE>
+                            </TD>
+                          </TR>
+                          <TR BGCOLOR="#FFFFFF"> 
+                            <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                          </TR>
+                        </TABLE>
+                      </TD>
+                      <TD WIDTH="72"> 
+                        <TABLE WIDTH="72" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                          <TR>
+                            <TD><IMG SRC="img/general/fotito.jpg" WIDTH="55" HEIGHT="66"></TD>
+                            <TD VALIGN="BOTTOM"><IMG SRC="img/general/chanfle_bajo.gif" WIDTH="17" HEIGHT="18"></TD>
+                          </TR>
+                        </TABLE>
+                      </TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+              </TR>
+            </TABLE>
+          </TD>
+          <TD VALIGN="TOP" WIDTH="100%"> 
+            <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+              <TR> 
+                <TD BGCOLOR="#FFFFFF"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+              </TR>
+              <TR> 
+                <TD HEIGHT="19"><IMG SRC="img/general/mira.jpg" WIDTH="406" HEIGHT="16"></TD>
+              </TR>
+              <TR> 
+                <TD HEIGHT="59"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+ CODEBASE="http://active.macromedia.com/flash2/cabs/swflash.cab#version=4,0,0,0"
+ ID=menu_pa_bajar WIDTH=406 HEIGHT=46>
+                    <PARAM NAME=movie VALUE="flash/menu_pa_bajar.swf">
+                    <PARAM NAME=menu VALUE=false>
+                    <PARAM NAME=quality VALUE=high>
+                    <PARAM NAME=wmode VALUE=transparent>
+                    <PARAM NAME=bgcolor VALUE=#323967>
+                    <EMBED SRC="flash/menu_pa_bajar.swf" MENU=false QUALITY=high WMODE=transparent BGCOLOR=#323967  WIDTH=406 HEIGHT=46 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
+                    </EMBED> 
+                  </OBJECT> </TD>
+              </TR>
+              <TR> 
+                <TD BGCOLOR="#FFFFFF"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+              </TR>
+              <TR> 
+                <TD BGCOLOR="#485977"> 
+                  <TABLE WIDTH="400" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="17">
+                    <TR> 
+                      <TD WIDTH="199"><A HREF="downloads/index.html?inc=ecards"><IMG SRC="img/general/e_cards.gif" WIDTH="41" HEIGHT="6" HSPACE="3" BORDER="0"></A></TD>
+                      <TD BGCOLOR="#FFFFFF" WIDTH="1"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                      <TD WIDTH="200"><A HREF="downloads/index.html?inc=wallpapers"><IMG SRC="img/general/walls.gif" WIDTH="59" HEIGHT="6" HSPACE="3" BORDER="0"></A></TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+              </TR>
+              <TR> 
+                <TD BGCOLOR="#FFFFFF"><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+              </TR>
+              <TR BGCOLOR="#FFFFFF"> 
+                <TD> 
+                  <TABLE WIDTH="404" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+                    <TR> 
+                      <TD WIDTH="130" BGCOLOR="#323967">&nbsp;</TD>
+                      <TD WIDTH="274"><IMG SRC="img/general/downloads.gif" WIDTH="274" HEIGHT="14" USEMAP="#Map3" BORDER="0"><MAP NAME="Map3"><AREA SHAPE="RECT" COORDS="85,3,189,11" HREF="downloads/index.html?inc=fotos"><AREA SHAPE="RECT" COORDS="220,3,259,10" HREF="downloads/index.html?inc=videos"></MAP></TD>
+                    </TR>
+                  </TABLE>
+                </TD>
+              </TR>
+            </TABLE>
+            <BR>
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+  <TR BGCOLOR="#323967"> 
+    <TD>&nbsp;</TD>
+  </TR>
+  <TR BGCOLOR="#FFFFFF"> 
+    <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+  <TR BGCOLOR="#485977"> 
+    <TD><IMG SRC="img/general/spacer.gif" WIDTH="4" HEIGHT="8"></TD>
+  </TR>
+  <TR BGCOLOR="#FFFFFF"> 
+    <TD><IMG SRC="img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<table width="735" border="0" cellspacing="2" cellpadding="2">
+  <tr align="right"> 
+    <td><img src="img/general/powered_by_s.gif" width="180" height="28"></td>
+  </tr>
+</table>
+</BODY>
+</HTML>

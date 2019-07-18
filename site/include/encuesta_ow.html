@@ -1,0 +1,116 @@
+<?
+if ( (isset($cookencbermudez) && !isset($voto)) || (!isset($cookencbermudez) && isset($voto)) || (!isset($cookencbermudez) && !isset($voto)) ){
+
+if (isset($voto)) {
+	$minutos=60;
+	setcookie("cookencbermudez", "encuesta", time() + $minutos * 60);
+	}
+
+include('../include/db_connect.inc');
+
+$result = mysql_query("SELECT * FROM encuesta_preguntas WHERE nivel='actual'");
+$row = mysql_fetch_array($result);
+
+if (isset($voto)) {
+	$fecha_creacion = date ("Y-m-d");
+	$hora= date ("H-i-s");
+	  mysql_query("INSERT INTO encuesta_votos (fecha_creacion, id_pregunta, ip_usuario, voto, hora) ". "VALUES ('$fecha_creacion', '$row[id]', '$REMOTE_ADDR', '$voto', '$hora')");
+	}
+
+				//empieza contabilidad;
+
+
+$result2 = mysql_query("select * from encuesta_votos where id_pregunta='$row[id]'");
+$votos_total = mysql_num_rows($result2);
+
+$respuestas=strtok($row[respuestas], ";");
+$x=1;
+while ($respuestas){
+	$respuesta[$x]=$respuestas;
+	$respuestas=strtok(";");
+
+		$result3 = mysql_query("SELECT * FROM encuesta_votos WHERE id_pregunta='$row[id]' and voto='$respuesta[$x]'");
+		$votos_respuesta[$x] = mysql_num_rows($result3);
+		$porcen_voto[$x] = (100 * $votos_respuesta[$x] / $votos_total);
+
+	$x++;
+	}
+
+?> 
+<HTML>
+<HEAD>
+<TITLE>Resultado Encuesta</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" HREF="../include/estilos.css">
+</HEAD>
+<BODY LEFTMARGIN="3" TOPMARGIN="3" MARGINWIDTH="3" MARGINHEIGHT="3" BGCOLOR="#FF7F00">
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#000000" ALIGN="CENTER"> 
+    <TD>Resultados de la Encuesta</TD>
+  </TR>
+  <TR BGCOLOR="#FF7F00" ALIGN="CENTER"> 
+    <TD><IMG SRC="../img/general/spacer.gif" WIDTH="3" HEIGHT="3"></TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR BGCOLOR="#FFFFFF"> 
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+    <TD VALIGN="TOP"> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR BGCOLOR="#000000"> 
+          <TD><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+        </TR>
+        <TR ALIGN="CENTER"> 
+          <TD HEIGHT="30"><FONT COLOR="#000000"><? echo $row[pregunta] ?></FONT></TD>
+        </TR>
+      </TABLE>
+    </TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="0" CELLPADDING="0" BGCOLOR="#FFFFFF" HEIGHT="130">
+  <TR> 
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"> 
+    </TD>
+    <TD WIDTH="20">&nbsp; </TD>
+    <?
+$respuestas=strtok($row[respuestas], ";");
+$x=1;
+while ($respuestas){
+	$respuesta[$x]=$respuestas;
+	$respuestas=strtok(";");
+?>
+    <TD VALIGN="BOTTOM"> 
+      <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="1">
+        <TR ALIGN="CENTER" BGCOLOR="#666666"> 
+          <TD HEIGHT="15"><? echo floor($porcen_voto[$x]) ?>%</TD>
+        </TR>
+        <TR ALIGN="CENTER" BGCOLOR="#000000"> 
+          <TD><IMG SRC="../img/general/spacer.gif" WIDTH="10" HEIGHT="<? if($porcen_voto[$x]==0){ echo "1";}else{ echo floor($porcen_voto[$x]);} ?>"></TD>
+        </TR>
+        <TR ALIGN="CENTER" BGCOLOR="#FF7F00"> 
+          <TD HEIGHT="15"><? echo $x ?></TD>
+        </TR>
+      </TABLE>
+    </TD>
+    <?
+	$x++;
+	}
+?>
+    <TD WIDTH="20">&nbsp; </TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<TABLE WIDTH="300" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR> 
+    <TD BACKGROUND="../img/general/fondo_ow.gif" WIDTH="100%"><IMG SRC="../img/general/form_left.gif" WIDTH="15" HEIGHT="15"></TD>
+    <TD BGCOLOR="#000000" WIDTH="1"><IMG SRC="../img/general/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+  </TR>
+</TABLE>
+<P>&nbsp;</P>
+</BODY>
+</HTML>
+<? }else{ 
+	include "encuesta_ow_yavotastes.inc";
+ }
+?>
